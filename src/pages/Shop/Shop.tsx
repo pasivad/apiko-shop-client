@@ -17,14 +17,24 @@ import RegisterModal from '../../components/RegisterModal/RegisterModal';
 import LoginModal from '../../components/LoginModal/LoginModal';
 import AuthModal from '../../components/AuthModal/AuthModal';
 import ProductModal from '../../components/ProductModal/ProductModal';
-import { fetchProducts } from '../../redux/slices/products';
+import { fetchProducts, fetchProductsCategory } from '../../redux/slices/products';
+
+interface ProductItemProps {
+  id: number;
+  title: string;
+  picture: string;
+  price: number;
+}
 
 export default function Shop() {
+  const [sort, setSort] = useState<string>('');
+  const [categoryId, setCategoryId] = useState<number>(0);
+
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, []);
+    categoryId ? dispatch(fetchProductsCategory({ categoryId, sort })) : dispatch(fetchProducts(sort));
+  }, [sort, categoryId]);
 
   const modals = useSelector((state: RootState) => state.modals);
   const { products } = useSelector((state: RootState) => state.products);
@@ -57,22 +67,20 @@ export default function Shop() {
       <div className={styles.container}>
         <div className={styles.filter_bar}>
           <SearchBar />
-          <CategoryBar />
-          <SortingBar />
+          <CategoryBar
+            setCategoryId={setCategoryId}
+            categoryId={categoryId}
+          />
+          <SortingBar
+            setSort={setSort}
+            sort={sort}
+          />
         </div>
         <div className={styles.products_list}>
-          {/* {Array.from(Array(12).keys()).map((el) => (
-            <ProductItem key={el} />
-          ))} */}
-          {(isProductsLoading ? [...Array(3)] : products.items).map((obj, index) =>
-            isProductsLoading ? (
-              <ProductItem
-                id={123}
-                title={'123'}
-                img={'123'}
-                price={123}
-              />
-            ) : (
+          {isProductsLoading ? (
+            <div className={styles.plug}></div>
+          ) : (
+            products.items.map((obj: ProductItemProps, index) => (
               <ProductItem
                 key={index}
                 id={obj.id}
@@ -80,7 +88,7 @@ export default function Shop() {
                 img={obj.picture}
                 price={obj.price}
               />
-            )
+            ))
           )}
         </div>
         <button className={styles.loadmore_btn}>Load more...</button>
