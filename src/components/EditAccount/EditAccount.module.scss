@@ -1,0 +1,72 @@
+@import '../../styles/vars.scss';
+
+.editaccount_container {
+  margin-top: 60px;
+  width: 54%;
+}
+
+.formgroup_title {
+  font-family: 'Heebo';
+  font-size: 20px;
+}
+
+.form {
+  padding: 10px 50px;
+}
+
+.input {
+  width: calc(100% - 32px);
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: 1px solid #E0E0E0;
+  color: $dark_text;
+}
+
+.input_group {
+  width: 100%;
+  position: relative;
+  margin: 20px 0;
+
+  .placeholder {
+    font-size: 16px;
+    font-family: 'Heebo';
+    padding: 0 10px;
+    color: #707070;
+    position: absolute;
+    pointer-events: none;
+    top: 30%;
+    left: 8px;
+    transition: all 0.1s ease;
+  }
+
+  .input:focus ~ .placeholder,
+  .input:not(:focus):valid ~ .placeholder {
+    background-color: white;
+    top: -5px;
+    font-size: 12px;
+  }
+}
+
+.save_btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px 0;
+
+  font-family: 'Heebo';
+  font-size: 14px;
+  font-weight: 500;
+
+  background-color: $orange;
+  border: none;
+  border-radius: 4px;
+  color: white;
+
+  transition: background-color .1s ease-in-out;
+  &:hover {
+    background-color: darken($color: $orange, $amount: 10);
+  }
+}
+
+.formgroup_password {
+  margin-top: 50px;
+}

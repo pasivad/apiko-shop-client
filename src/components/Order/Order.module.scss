@@ -1,0 +1,43 @@
+@import '../../styles/vars.scss';
+
+.order_item {
+  font-family: 'Heebo';
+  margin-bottom: 20px;
+  padding: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  background-color: white;
+  border: 1px solid #ECEEF0;
+  border-radius: 4px;
+
+  box-shadow: 0 4px 14px 0 rgba($color: #797979, $alpha: .06);
+
+  transition: background-color .1s ease-in-out;
+  &:hover {
+    background-color: #ECEEF0;
+  }
+}
+
+.order_info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: left;
+}
+
+.order_info_about {
+  font-size: 15px;
+  color: #707070;
+
+  span {
+    margin-left: 10px;
+  }
+}
+
+.order_info_values {
+  font-size: 15px;
+  font-weight: 500;
+  color: $dark_text;
+}
+

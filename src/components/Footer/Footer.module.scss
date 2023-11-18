@@ -1,0 +1,14 @@
+@import '../../styles/vars.scss';
+
+.footer {
+  display: flex;
+  justify-content: center;
+
+  background-color: #F1F1F3;
+  padding: 25px 0;
+
+  color: #707070;
+  font-family: 'Heebo';
+  font-size: 14px;
+  line-height: 26px;
+}

@@ -1,0 +1,99 @@
+@import '../../styles/vars.scss';
+
+.order_item {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+
+  border: 1px solid #eceef0;
+  border-radius: 4px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+
+  box-shadow: 0 4px 14px 0 rgba($color: #797979, $alpha: 0.06);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.order_item_info {
+  display: flex;
+}
+
+.img_background {
+  width: 125px;
+  height: 125px;
+  background-color: #ECEEF0;
+  border-radius: 3px;
+
+  display: flex;
+  align-items: center;
+}
+
+.order_item_img {
+  width: 100%;
+  border-radius: 3px;
+}
+
+.order_item_options {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
+  margin: 10px 0 0 20px;
+  font-family: 'Heebo';
+  font-size: 14px;
+  color: $dark_text;
+}
+
+.order_item_name {
+  margin-bottom: 20px;
+}
+
+.order_item_number {
+  font-size: 15px;
+  font-family: 'Heebo';
+  color: #707070;
+  line-height: 22px;
+
+  span {
+    color: $dark_text;
+    font-weight: 500;
+    margin-left: 20px;
+  }
+}
+
+.order_item_price {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  font-family: 'Heebo';
+
+  &:before {
+    content: '';
+    display: block;
+
+    width: 1px;
+    height: 103px;
+    background-color: #eceef0;
+
+    position: absolute;
+    top: 0;
+    left: -25px;
+    z-index: 1;
+  }
+}
+
+.order_item_price_text {
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.order_item_price_value {
+  font-size: 18px;
+  font-weight: 700;
+}

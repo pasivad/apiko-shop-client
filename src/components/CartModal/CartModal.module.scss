@@ -1,0 +1,133 @@
+@import '../../styles/vars.scss';
+
+.modal_window {
+  background-color: white;
+
+  border-radius: 4px;
+  box-shadow: 0 0 12px 0 rgba($color: #000000, $alpha: 0.1);
+
+  &:first-child {
+    margin-bottom: 15px;
+  }
+}
+
+.modal_close {
+  margin: 30px 30px 0 calc(100% - 55px);
+  position: relative;
+  border: none;
+  background-color: transparent;
+  height: 20px;
+  width: 20px;
+
+  &::before {
+    display: block;
+    content: '';
+
+    width: 2px;
+    height: 25px;
+
+    background-color: #707070;
+    rotate: (45deg);
+
+    position: absolute;
+    top: -2px;
+    left: 9px;
+    z-index: 1;
+  }
+
+  &::after {
+    display: block;
+    content: '';
+
+    width: 2px;
+    height: 25px;
+
+    background-color: #707070;
+    rotate: (135deg);
+
+    position: absolute;
+    top: -2px;
+    left: 9px;
+    z-index: 1;
+  }
+
+  &:hover {
+    &::before,
+    &::after {
+      background-color: $dark_text;
+    }
+  }
+}
+
+.cart_modal {
+  padding: 0 70px;
+  width: 480px;
+  max-height: 485px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.cart_modal_header {
+  font-family: 'Heebo';
+  font-size: 24px;
+  font-weight: 500;
+  color: #101010;
+  margin: 35px 0 10px;
+  line-height: 35px;
+}
+
+.cart_modal_text {
+  font-family: 'Heebo';
+  font-size: 15px;
+  color: $dark_text;
+  margin-bottom: 40px;
+  line-height: 22px;
+}
+
+.back_btn {
+  width: 65%;
+  margin: 0 auto;
+  margin-bottom: 25px;
+  padding: 7px 0;
+
+  text-decoration: none;
+  font-family: 'Heebo';
+  line-height: 24px;
+  color: white;
+
+  background-color: $orange;
+  border: none;
+  border-radius: 4px;
+
+  transition: all 0.1s ease-in-out;
+  &:hover {
+    background-color: darken($color: $orange, $amount: 15);
+    color: darken($color: white, $amount: 10);
+  }
+}
+
+.order_btn {
+  width: 65%;
+  margin: 0 auto;
+  margin-bottom: 85px;
+  padding: 7px 0;
+
+  text-decoration: none;
+  font-family: 'Heebo';
+  color: $orange;
+  line-height: 24px;
+
+  background-color: white;
+  border: 1px solid $orange;
+  border-radius: 4px;
+
+  transition: all 0.1s ease-in-out;
+  &:hover {
+    background-color: darken($color: white, $amount: 15);
+    color: darken($color: $orange, $amount: 20);
+    border: 1px solid darken($color: $orange, $amount: 15);
+  }
+}

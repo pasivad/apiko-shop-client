@@ -1,0 +1,10 @@
+@import '../../styles/vars.scss';
+
+.favorites_grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+
+  width: 96%;
+  margin: 50px 0;
+}

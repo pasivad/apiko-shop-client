@@ -1,0 +1,26 @@
+@import '../../styles/vars.scss';
+
+.searchbar_item {
+  width: 36%;
+}
+
+.searchbar {
+  background-color: #F9FAFB;
+  border: 1px solid #DEDEE0;
+  border-radius: 5px;
+  padding: 10px;
+
+  display: flex;
+  align-items: center;
+}
+
+.search_input {
+  background-color: transparent;
+  border: none;
+  padding: 0 0 0 10px;
+  width: 100%;
+
+  font-family: 'Heebo';
+  font-size: 14px;
+  color: #707070;
+}
