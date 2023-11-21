@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { selectIsLogin } from '../../redux/slices/user';
 import { loginModal, registerModal } from '../../redux/slices/modals';
 
 import styles from './Header.module.scss';
@@ -9,9 +10,12 @@ import styles from './Header.module.scss';
 import logo from '../../images/logo.svg';
 import icon_heart from '../../images/icon_heart.svg';
 import icon_basket from '../../images/icon_basket.svg';
+import HeaderAccount from '../HeaderAccount/HeaderAccount';
 
 export default function Header() {
   const dispatch = useDispatch();
+
+  const isAuth = useSelector(selectIsLogin);
 
   return (
     <div className={styles.header}>
@@ -21,7 +25,7 @@ export default function Header() {
           alt="logo"
         ></img>
       </Link>
-      <div>
+      <div className={styles.header_options}>
         <button className={styles.options_icons}>
           <img
             alt="favorites"
@@ -39,18 +43,24 @@ export default function Header() {
             className={styles.options_icons_img}
           ></img>
         </Link>
-        <button
-          onClick={() => dispatch(registerModal())}
-          className={styles.auth_btn__register}
-        >
-          Register
-        </button>
-        <button
-          onClick={() => dispatch(loginModal())}
-          className={styles.auth_btn__login}
-        >
-          Log in
-        </button>
+        {isAuth ? (
+          <HeaderAccount />
+        ) : (
+          <>
+            <button
+              onClick={() => dispatch(registerModal())}
+              className={styles.auth_btn__register}
+            >
+              Register
+            </button>
+            <button
+              onClick={() => dispatch(loginModal())}
+              className={styles.auth_btn__login}
+            >
+              Log in
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

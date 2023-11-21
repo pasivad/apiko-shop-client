@@ -7,6 +7,11 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (s
   return data;
 });
 
+export const fetchProductsSearch = createAsyncThunk('products/fetchProductsSearch', async (search: string) => {
+  const { data } = await axios.get(`/products/search?keywords=${search}&limit=12`);
+  return data;
+});
+
 export const fetchProductsCategory = createAsyncThunk(
   'products/fetchProductsCategory',
   async ({ categoryId, sort }: { categoryId: number; sort: string }) => {
@@ -29,7 +34,6 @@ const productsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.pending, (state) => {
-      state.products.items = [];
       state.products.status = 'loading';
     });
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
@@ -37,11 +41,9 @@ const productsSlice = createSlice({
       state.products.status = 'loaded';
     });
     builder.addCase(fetchProducts.rejected, (state) => {
-      state.products.items = [];
       state.products.status = 'error';
     });
     builder.addCase(fetchProductsCategory.pending, (state) => {
-      state.products.items = [];
       state.products.status = 'loading';
     });
     builder.addCase(fetchProductsCategory.fulfilled, (state, action) => {
@@ -49,7 +51,16 @@ const productsSlice = createSlice({
       state.products.status = 'loaded';
     });
     builder.addCase(fetchProductsCategory.rejected, (state) => {
-      state.products.items = [];
+      state.products.status = 'error';
+    });
+    builder.addCase(fetchProductsSearch.pending, (state) => {
+      state.products.status = 'loading';
+    });
+    builder.addCase(fetchProductsSearch.fulfilled, (state, action) => {
+      state.products.items = action.payload;
+      state.products.status = 'loaded';
+    });
+    builder.addCase(fetchProductsSearch.rejected, (state) => {
       state.products.status = 'error';
     });
   },

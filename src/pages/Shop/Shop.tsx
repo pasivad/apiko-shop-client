@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { RotatingLines } from 'react-loader-spinner';
 
+import useDebounce from '../../hooks/useDebounce';
 import { RootState, AppDispatch } from '../../redux/store';
+import { fetchProducts, fetchProductsSearch, fetchProductsCategory } from '../../redux/slices/products';
 
 import styles from './Shop.module.scss';
 
@@ -17,7 +20,6 @@ import RegisterModal from '../../components/RegisterModal/RegisterModal';
 import LoginModal from '../../components/LoginModal/LoginModal';
 import AuthModal from '../../components/AuthModal/AuthModal';
 import ProductModal from '../../components/ProductModal/ProductModal';
-import { fetchProducts, fetchProductsCategory } from '../../redux/slices/products';
 
 interface ProductItemProps {
   id: number;
@@ -27,14 +29,21 @@ interface ProductItemProps {
 }
 
 export default function Shop() {
+  const [search, setSearch] = useState<string>('');
   const [sort, setSort] = useState<string>('');
   const [categoryId, setCategoryId] = useState<number>(0);
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const debouncedSearchTerm = useDebounce({ value: search, delay: 500 });
+
   useEffect(() => {
-    categoryId ? dispatch(fetchProductsCategory({ categoryId, sort })) : dispatch(fetchProducts(sort));
-  }, [sort, categoryId]);
+    debouncedSearchTerm
+      ? dispatch(fetchProductsSearch(debouncedSearchTerm))
+      : categoryId
+      ? dispatch(fetchProductsCategory({ categoryId, sort }))
+      : dispatch(fetchProducts(sort));
+  }, [debouncedSearchTerm, sort, categoryId]);
 
   const modals = useSelector((state: RootState) => state.modals);
   const { products } = useSelector((state: RootState) => state.products);
@@ -66,30 +75,45 @@ export default function Shop() {
       )}
       <div className={styles.container}>
         <div className={styles.filter_bar}>
-          <SearchBar />
-          <CategoryBar
-            setCategoryId={setCategoryId}
-            categoryId={categoryId}
+          <SearchBar
+            setSearch={setSearch}
+            search={search}
           />
-          <SortingBar
-            setSort={setSort}
-            sort={sort}
-          />
+          {search === '' && (
+            <>
+              <CategoryBar
+                setCategoryId={setCategoryId}
+                categoryId={categoryId}
+              />
+              <SortingBar
+                setSort={setSort}
+                sort={sort}
+              />
+            </>
+          )}
         </div>
         <div className={styles.products_list}>
-          {isProductsLoading ? (
-            <div className={styles.plug}></div>
-          ) : (
-            products.items.map((obj: ProductItemProps, index) => (
-              <ProductItem
-                key={index}
-                id={obj.id}
-                title={obj.title}
-                img={obj.picture}
-                price={obj.price}
+          {isProductsLoading && (
+            <div className={styles.loading_products}>
+              <RotatingLines
+                strokeColor="white"
+                strokeWidth="5"
+                animationDuration="1"
+                width="90"
+                visible={true}
               />
-            ))
+              <div className={styles.loading_text}>Searching...</div>
+            </div>
           )}
+          {products.items.map((obj: ProductItemProps, index) => (
+            <ProductItem
+              key={index}
+              id={obj.id}
+              title={obj.title}
+              img={obj.picture}
+              price={obj.price}
+            />
+          ))}
         </div>
         <button className={styles.loadmore_btn}>Load more...</button>
       </div>

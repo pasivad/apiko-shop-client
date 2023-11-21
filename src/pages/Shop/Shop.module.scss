@@ -24,6 +24,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
+  min-height: 740px;
 }
 
 .loadmore_btn {
@@ -47,6 +48,29 @@
   }
 }
 
-.plug {
-  height: 1000px;
+.loading_products {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  background-color: rgba($color: #000000, $alpha: .7);
+
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading_text {
+  color: white;
+
+  font-family: 'Heebo';
+  font-weight: 500;
+  font-size: 20px;
+  margin-top: 40px;
+  line-height: 20px;
 }

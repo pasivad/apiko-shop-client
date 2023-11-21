@@ -4,10 +4,10 @@ const instance = axios.create({
   baseURL: 'https://demo-api.apiko.academy/api',
 });
 
-// instance.interceptors.request.use((config) => {
-//   config.headers.Authorization = window.localStorage.getItem('token');
+instance.interceptors.request.use((config) => {
+  config.headers.Authorization = window.localStorage.getItem('token');
 
-//   return config;
-// });
+  return config;
+});
 
 export default instance;

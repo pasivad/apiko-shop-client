@@ -26,6 +26,7 @@ export default function Cart() {
     setIsOpen(false);
   };
 
+
   return (
     <>
       <Header />
