@@ -6,6 +6,11 @@ export const fetchRegister = createAsyncThunk('/user/fetchRegister', async (para
   return data;
 });
 
+export const fetchLogin = createAsyncThunk('/user/fetchLogin', async (params: Object) => {
+  const { data } = await axios.post('/auth/login', params);
+  return data;
+});
+
 export const fetchUser = createAsyncThunk('/user/fetchUser', async () => {
   const { data } = await axios.get('/account');
   return data;
@@ -37,8 +42,19 @@ const userSlice = createSlice({
       state.data = null;
       state.status = 'error';
     });
-    builder.addCase(fetchUser.pending, (state) => {
+    builder.addCase(fetchLogin.pending, (state) => {
       state.data = null;
+      state.status = 'loading';
+    });
+    builder.addCase(fetchLogin.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.status = 'loaded';
+    });
+    builder.addCase(fetchLogin.rejected, (state) => {
+      state.data = null;
+      state.status = 'error';
+    });
+    builder.addCase(fetchUser.pending, (state) => {
       state.status = 'loading';
     });
     builder.addCase(fetchUser.fulfilled, (state, action) => {

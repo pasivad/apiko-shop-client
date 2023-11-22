@@ -24,7 +24,11 @@
   font-family: 'Heebo';
   line-height: 16px;
   color: #110f21;
-  padding: 10px;
+
+  padding: 10px 0;
+  width: 40px;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 .header_account_btn {
@@ -114,28 +118,37 @@
 }
 
 .settings_btn {
+  outline: none;
+
   text-align: left;
-  // margin-bottom: 12px;
+  text-decoration: none;
   padding: 9px 17px;
 
   font-family: 'Heebo';
+  line-height: 20px;
   font-size: 14px;
   color: $dark_text;
 
   background-color: white;
   border: none;
 
-  transition: background-color .1s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
   &:hover {
-    background-color: #E4E4E4;
+    background-color: #e4e4e4;
+  }
+  &:active, &:focus {
+    outline: none;
   }
 }
 
+
 .logout_btn {
+  text-decoration: none;
   text-align: left;
   padding: 9px 17px;
 
   font-family: 'Heebo';
+  line-height: 20px;
   font-size: 14px;
   font-weight: 500;
   color: #f44336;
@@ -143,8 +156,8 @@
   background-color: white;
   border: none;
 
-  transition: background-color .1s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
   &:hover {
-    background-color: #E4E4E4;
+    background-color: #e4e4e4;
   }
 }

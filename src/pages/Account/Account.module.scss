@@ -26,6 +26,8 @@
 
   width: 88px;
   height: 88px;
+  padding: 34px 0 30px;
+  box-sizing: border-box;
   background-color: #dedee0;
   border-radius: 50%;
 }
@@ -33,13 +35,12 @@
 .name {
   font-family: 'Heebo';
   font-size: 22px;
+  height: 22px;
 
   margin: 15px 0 30px;
 }
 
 .account_menu {
-  // padding: 0 100px;
-  // width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 

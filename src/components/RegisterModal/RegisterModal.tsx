@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 
 import type { AppDispatch } from '../../redux/store';
 
-import axios from '../../api/http';
 import { loginModal, registerModal } from '../../redux/slices/modals';
 import { fetchRegister } from '../../redux/slices/user';
 
@@ -21,6 +20,7 @@ export default function RegisterModal() {
   const [email, setEmail] = useState<string>('');
   const [emptyEmail, setEmptyEmail] = useState<boolean>(false);
   const [validateEmail, setValidateEmail] = useState<boolean>(true);
+  const [emailExist, setEmailExist] = useState<boolean>(false);
 
   const [phone, setPhone] = useState<string>('');
   const [emptyPhone, setEmptyPhone] = useState<boolean>(false);
@@ -31,12 +31,11 @@ export default function RegisterModal() {
   const [validatePassword, setValidatePassword] = useState<boolean>(true);
 
   const handleRegisterButton = async () => {
-    handleValidation();
     if (
-      !emptyFullName &&
-      !emptyEmail &&
-      !emptyPhone &&
-      !emptyPassword &&
+      fullName !== '' &&
+      email !== '' &&
+      phone !== '' &&
+      password !== '' &&
       validateEmail &&
       validatePhone &&
       validatePassword
@@ -44,11 +43,19 @@ export default function RegisterModal() {
       const data = await dispatch(
         fetchRegister({ fullName: fullName, email: email, password: password, phone: phone })
       );
-
+      if (!data.payload) {
+        setEmailExist(true);
+        return;
+      }
       if ('token' in data.payload) {
         window.localStorage.setItem('token', `Bearer ${data.payload.token}`);
         dispatch(registerModal());
       }
+    } else {
+      setEmptyFullName(true);
+      setEmptyEmail(true);
+      setEmptyPhone(true);
+      setEmptyPassword(true);
     }
   };
 
@@ -58,33 +65,33 @@ export default function RegisterModal() {
   };
 
   const handleFullNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName((e.target.value = e.target.value.replace(/[^a-zA-Z]+/, '')));
+    setFullName((e.target.value = e.target.value.replace(/[^a-zA-Z ]+/, '')));
+    e.target.value === '' ? setEmptyFullName(true) : setEmptyFullName(false);
   };
+
   const handleEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  };
-  const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhone(e.target.value);
-  };
-  const handlePasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleValidation = () => {
-    fullName === '' ? setEmptyFullName(true) : setEmptyFullName(false);
-    email === '' ? setEmptyEmail(true) : setEmptyEmail(false);
-    phone === '' ? setEmptyPhone(true) : setEmptyPhone(false);
-    password === '' ? setEmptyPassword(true) : setEmptyPassword(false);
-
-    email.match(
+    e.target.value === '' ? setEmptyEmail(true) : setEmptyEmail(false);
+    e.target.value.match(
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )
       ? setValidateEmail(true)
       : setValidateEmail(false);
-    password.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
+    setEmailExist(false);
+  };
+
+  const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(e.target.value);
+    e.target.value === '' ? setEmptyPhone(true) : setEmptyPhone(false);
+    e.target.value.length >= 10 && e.target.value.length < 14 ? setValidatePhone(true) : setValidatePhone(false);
+  };
+
+  const handlePasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    e.target.value === '' ? setEmptyPassword(true) : setEmptyPassword(false);
+    e.target.value.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
       ? setValidatePassword(true)
       : setValidatePassword(false);
-    phone.length > 10 && phone.length < 14 ? setValidatePhone(true) : setValidatePhone(false);
   };
 
   return (
@@ -117,15 +124,21 @@ export default function RegisterModal() {
             <input
               type="text"
               id="email"
-              className={!emptyEmail && validateEmail ? styles.input : styles.input_error}
+              className={!emptyEmail && validateEmail && !emailExist ? styles.input : styles.input_error}
               onChange={handleEmailInput}
               required
             />
-            <label className={!emptyEmail && validateEmail ? styles.placeholder : styles.placeholder__error}>
+            <label
+              className={!emptyEmail && validateEmail && !emailExist ? styles.placeholder : styles.placeholder__error}
+            >
               Email
             </label>
             <label className={styles.label_error}>
-              {emptyEmail ? 'Required info is missing' : !validateEmail && 'Incorrect data'}
+              {emailExist
+                ? 'Such email is already used'
+                : !validateEmail
+                ? 'Incorrect data'
+                : emptyEmail && 'Required info is missing'}
             </label>
           </div>
 
@@ -143,7 +156,7 @@ export default function RegisterModal() {
               Phone number
             </label>
             <label className={styles.label_error}>
-              {emptyPhone ? 'Required info is missing' : !validatePhone && 'Incorrect data'}
+              {!validatePhone ? 'Incorrect data' : emptyPhone && 'Required info is missing'}
             </label>
           </div>
 
@@ -153,6 +166,7 @@ export default function RegisterModal() {
               type={showPassword ? 'text' : 'password'}
               id="password"
               className={!emptyPassword && validatePassword ? styles.input : styles.input_error}
+              value={password}
               onChange={handlePasswordInput}
               required
             ></input>
@@ -169,7 +183,7 @@ export default function RegisterModal() {
               Password
             </label>
             <label className={styles.label_error}>
-              {emptyPassword ? 'Required info is missing' : !validatePassword && 'Incorrect data'}
+              {!validatePassword ? 'Incorrect data' : emptyPassword && 'Required info is missing'}
             </label>
           </div>
 

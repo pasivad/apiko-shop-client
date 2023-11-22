@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import type { RootState } from '../../redux/store';
@@ -13,8 +13,21 @@ import Favourites from '../../components/Favourites/Favourites';
 import Modal from '../../components/Modal/Modal';
 import OrderModal from '../../components/OrderModal/OrderModal';
 
+interface UserProps {
+  data: {
+    fullName: string;
+    email: string;
+    phone: string;
+    country: string;
+    city: string;
+    address: string;
+  } | null;
+  status: string;
+}
+
 export default function Account() {
   const modals = useSelector((state: RootState) => state.modals);
+  const user: UserProps = useSelector((state: RootState) => state.user);
 
   const [accountMenu, setAccountMenu] = useState<number>(1);
   return (
@@ -25,10 +38,16 @@ export default function Account() {
         </Modal>
       )}
       <Header />
+
       <div className={styles.container}>
         <div className={styles.container_inner}>
-          <div className={styles.name_initials}>TS</div>
-          <div className={styles.name}>Tony Stark</div>
+          <div className={styles.name_initials}>
+            {user.data?.fullName
+              .split(' ')
+              .map((word) => word.charAt(0))
+              .join('')}
+          </div>
+          <div className={styles.name}>{user.data?.fullName}</div>
           <div className={styles.account_menu}>
             <button
               onClick={() => setAccountMenu(1)}
@@ -52,11 +71,22 @@ export default function Account() {
               Favourites
             </button>
           </div>
-          {accountMenu === 1 && <EditAccount />}
+          {accountMenu === 1 && user.data && (
+            <EditAccount
+              // setTest={setTest}
+              fullName={user.data?.fullName}
+              email={user.data?.email}
+              phone={user.data?.phone}
+              country={user.data?.country}
+              city={user.data?.city}
+              address={user.data?.address}
+            />
+          )}
           {accountMenu === 2 && <OrdersHistory />}
           {accountMenu === 3 && <Favourites />}
         </div>
       </div>
+
       <Footer />
     </>
   );
