@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 
 import type { RootState } from '../../redux/store';
 
@@ -29,7 +30,10 @@ export default function Account() {
   const modals = useSelector((state: RootState) => state.modals);
   const user: UserProps = useSelector((state: RootState) => state.user);
 
-  const [accountMenu, setAccountMenu] = useState<number>(1);
+  const { pathname } = useLocation();
+
+  const [accountMenu, setAccountMenu] = useState<string>(pathname);
+
   return (
     <>
       {modals.orderModal && (
@@ -49,31 +53,34 @@ export default function Account() {
           </div>
           <div className={styles.name}>{user.data?.fullName}</div>
           <div className={styles.account_menu}>
-            <button
-              onClick={() => setAccountMenu(1)}
-              disabled={accountMenu === 1}
-              className={accountMenu === 1 ? styles.account_menu_item__active : styles.account_menu_item}
+            <Link
+              to="/account"
+              onClick={() => setAccountMenu('/account')}
+              className={accountMenu === '/account' ? styles.account_menu_item__active : styles.account_menu_item}
             >
               Edit Account
-            </button>
-            <button
-              onClick={() => setAccountMenu(2)}
-              disabled={accountMenu === 2}
-              className={accountMenu === 2 ? styles.account_menu_item__active : styles.account_menu_item}
+            </Link>
+            <Link
+              to="/account/orders"
+              onClick={() => setAccountMenu('/account/orders')}
+              className={
+                accountMenu === '/account/orders' ? styles.account_menu_item__active : styles.account_menu_item
+              }
             >
               Orders History
-            </button>
-            <button
-              onClick={() => setAccountMenu(3)}
-              disabled={accountMenu === 3}
-              className={accountMenu === 3 ? styles.account_menu_item__active : styles.account_menu_item}
+            </Link>
+            <Link
+              to="/account/favourites"
+              onClick={() => setAccountMenu('/account/favourites')}
+              className={
+                accountMenu === '/account/favourites' ? styles.account_menu_item__active : styles.account_menu_item
+              }
             >
               Favourites
-            </button>
+            </Link>
           </div>
-          {accountMenu === 1 && user.data && (
+          {accountMenu === '/account' && user.data && (
             <EditAccount
-              // setTest={setTest}
               fullName={user.data?.fullName}
               email={user.data?.email}
               phone={user.data?.phone}
@@ -82,8 +89,8 @@ export default function Account() {
               address={user.data?.address}
             />
           )}
-          {accountMenu === 2 && <OrdersHistory />}
-          {accountMenu === 3 && <Favourites />}
+          {accountMenu === '/account/orders' && <OrdersHistory />}
+          {accountMenu === '/account/favourites' && <Favourites />}
         </div>
       </div>
 

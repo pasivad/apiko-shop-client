@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { selectIsLogin } from '../../redux/slices/user';
-import { loginModal, registerModal } from '../../redux/slices/modals';
+import { authModal, loginModal, registerModal } from '../../redux/slices/modals';
 
 import styles from './Header.module.scss';
 
@@ -26,13 +26,29 @@ export default function Header() {
         ></img>
       </Link>
       <div className={styles.header_options}>
-        <button className={styles.options_icons}>
-          <img
-            alt="favorites"
-            src={icon_heart}
-            className={styles.options_icons_img}
-          ></img>
-        </button>
+        {isAuth ? (
+          <Link
+            to="/account/favourites"
+            className={styles.options_icons}
+          >
+            <img
+              alt="favorites"
+              src={icon_heart}
+              className={styles.options_icons_img}
+            ></img>
+          </Link>
+        ) : (
+          <button
+            onClick={() => dispatch(authModal())}
+            className={styles.options_icons}
+          >
+            <img
+              alt="favorites"
+              src={icon_heart}
+              className={styles.options_icons_img}
+            ></img>
+          </button>
+        )}
         <Link
           to="/cart"
           className={styles.options_icons}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { selectIsLogin } from '../../redux/slices/user';
 
 import styles from './CartModal.module.scss';
 
@@ -8,6 +10,8 @@ import { cartModal } from '../../redux/slices/modals';
 
 export default function CartModal() {
   const dispatch = useDispatch();
+
+  const isAuth = useSelector(selectIsLogin);
 
   return (
     <>
@@ -27,13 +31,15 @@ export default function CartModal() {
           >
             Continue shopping
           </Link>
-          <Link
-            to="/account"
-            onClick={() => dispatch(cartModal())}
-            className={styles.order_btn}
-          >
-            View order history
-          </Link>
+          {isAuth && (
+            <Link
+              to="/account/orders"
+              onClick={() => dispatch(cartModal())}
+              className={styles.order_btn}
+            >
+              View order history
+            </Link>
+          )}
         </div>
       </div>
     </>

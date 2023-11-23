@@ -18,7 +18,16 @@
   width: calc(100% - 32px);
   padding: 10px 15px;
   border-radius: 4px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
+  color: $dark_text;
+}
+
+.input_error {
+  width: calc(100% - 32px);
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: 1px solid rgba(244, 67, 54, 1);
+
   color: $dark_text;
 }
 
@@ -34,7 +43,7 @@
     color: #707070;
     position: absolute;
     pointer-events: none;
-    top: 30%;
+    top: 12px;
     left: 8px;
     transition: all 0.1s ease;
   }
@@ -45,15 +54,39 @@
     top: -5px;
     font-size: 12px;
   }
+
+  .placeholder__error {
+    font-size: 16px;
+    font-family: 'Heebo';
+    padding: 0 10px;
+    color: red;
+    position: absolute;
+    pointer-events: none;
+    top: 12px;
+    left: 8px;
+    transition: all 0.1s ease;
+  }
+
+  input:focus ~ .placeholder__error,
+  input:not(:focus):valid ~ .placeholder__error {
+    background-color: white;
+    top: -5px;
+    font-size: 12px;
+  }
+
+  .input:focus {
+    border: 2px solid #707070;
+    margin: -0.8px;
+  }
 }
 
 .save_btn {
-  margin-top: 20px;
+  margin-top: 10px;
   width: 100%;
   padding: 10px 0;
 
   font-family: 'Heebo';
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 
   background-color: $orange;
@@ -61,12 +94,65 @@
   border-radius: 4px;
   color: white;
 
-  transition: background-color .1s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
   &:hover {
     background-color: darken($color: $orange, $amount: 10);
+  }
+
+  &:disabled {
+    &:hover {
+      background-color: $orange;
+    }
   }
 }
 
 .formgroup_password {
   margin-top: 50px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.label_error {
+  height: 10px;
+  display: flex;
+  text-align: left;
+
+  font-size: 12px;
+  font-family: 'Heebo';
+  color: rgba(244, 67, 54, 1);
+
+  margin-top: 5px;
+}
+
+.password_btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  background-color: transparent;
+  border: none;
+}
+
+.password_label {
+  font-family: 'Heebo';
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #707070;
+  width: 80%;
+
+  display: flex;
+  text-align: left;
+}
+
+.Toastify__toast__container {
+  width: 400px;
 }

@@ -51,11 +51,6 @@ export default function RegisterModal() {
         window.localStorage.setItem('token', `Bearer ${data.payload.token}`);
         dispatch(registerModal());
       }
-    } else {
-      setEmptyFullName(true);
-      setEmptyEmail(true);
-      setEmptyPhone(true);
-      setEmptyPassword(true);
     }
   };
 
@@ -136,9 +131,9 @@ export default function RegisterModal() {
             <label className={styles.label_error}>
               {emailExist
                 ? 'Such email is already used'
-                : !validateEmail
-                ? 'Incorrect data'
-                : emptyEmail && 'Required info is missing'}
+                : emptyEmail
+                ? 'Required info is missing'
+                : !validateEmail && 'Incorrect data'}
             </label>
           </div>
 
@@ -156,7 +151,7 @@ export default function RegisterModal() {
               Phone number
             </label>
             <label className={styles.label_error}>
-              {!validatePhone ? 'Incorrect data' : emptyPhone && 'Required info is missing'}
+              {emptyPhone ? 'Required info is missing' : !validatePhone && 'Incorrect data'}
             </label>
           </div>
 
@@ -183,7 +178,7 @@ export default function RegisterModal() {
               Password
             </label>
             <label className={styles.label_error}>
-              {!validatePassword ? 'Incorrect data' : emptyPassword && 'Required info is missing'}
+              {emptyPassword ? 'Required info is missing' : !validatePassword && 'Incorrect data'}
             </label>
           </div>
 

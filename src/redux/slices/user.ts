@@ -55,6 +55,7 @@ const userSlice = createSlice({
       state.status = 'error';
     });
     builder.addCase(fetchUser.pending, (state) => {
+      // state.data = null;
       state.status = 'loading';
     });
     builder.addCase(fetchUser.fulfilled, (state, action) => {

@@ -49,9 +49,13 @@
 }
 
 .account_menu_item {
+  text-decoration: none;
+  text-align: center;
+
   background-color: white;
   border: 1.3px solid #dedee0;
-  width: 100%;
+  color: $dark_text;
+
   padding: 25px 30px;
   text-wrap: nowrap;
 
@@ -62,12 +66,14 @@
 }
 
 .account_menu_item__active {
+  text-align: center;
+  text-decoration: none;
+
   position: relative;
   background-color: $orange;
   color: white;
   border: 1.3px solid #dedee0;
 
-  width: 100%;
   padding: 25px 30px;
   text-wrap: nowrap;
 
@@ -88,4 +94,5 @@
 
     background-color: $orange;
   }
+  cursor: default;
 }

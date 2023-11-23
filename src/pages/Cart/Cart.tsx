@@ -1,31 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import type { RootState } from '../../redux/store';
 
-import styles from './Cart.module.scss';
-
+import axios from '../../api/http';
 import { cartModal } from '../../redux/slices/modals';
+
+import styles from './Cart.module.scss';
 
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import CartItem from '../../components/CartItem/CartItem';
+
 import Modal from '../../components/Modal/Modal';
 import CartModal from '../../components/CartModal/CartModal';
+import RegisterModal from '../../components/RegisterModal/RegisterModal';
+import LoginModal from '../../components/LoginModal/LoginModal';
+import AuthModal from '../../components/AuthModal/AuthModal';
+
+interface UserProps {
+  data: {
+    fullName: string;
+    email: string;
+    phone: string;
+    country: string;
+    city: string;
+    address: string;
+  } | null;
+  status: string;
+}
 
 export default function Cart() {
   const dispatch = useDispatch();
   const modals = useSelector((state: RootState) => state.modals);
+  const user: UserProps = useSelector((state: RootState) => state.user);
+
+  const [countriesArray, setCountriesArray] = useState<Array<string>>([]);
+
+  useEffect(() => {
+    axios.get('/locations/countries').then(({ data }) => setCountriesArray(data));
+  }, []);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [country, setCountry] = useState<string>('');
+
+  const [newFullName, setNewFullName] = useState<string>(user.data?.fullName!);
+
+  const [newPhone, setNewPhone] = useState<string>(user.data?.phone!);
+
+  const [newCountry, setNewCountry] = useState<string>(user.data?.country!);
+
+  const [newCity, setNewCity] = useState<string | undefined>(user.data?.city);
+
+  const [newAddress, setNewAddress] = useState<string | undefined>(user.data?.address);
+
+  const handleFullNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewFullName((e.target.value = e.target.value.replace(/[^a-zA-Z ]+/, '')));
+  };
+  const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewPhone(e.target.value);
+  };
+  const handleCityInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewCity(e.target.value);
+  };
+  const handleAddressInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewAddress(e.target.value);
+  };
 
   const handleDropdownClick = (e: React.MouseEvent) => {
-    setCountry(e.currentTarget.ariaValueText!);
+    setNewCountry(e.currentTarget.ariaValueText!);
     setIsOpen(false);
   };
 
+  const handleConfirmBtn = () => {
+    dispatch(cartModal());
+  };
+
+  const isLoaded = user.status === 'loaded';
 
   return (
     <>
@@ -33,6 +84,21 @@ export default function Cart() {
       {modals.cartModal && (
         <Modal>
           <CartModal />
+        </Modal>
+      )}
+      {modals.registerModal && (
+        <Modal>
+          <RegisterModal />
+        </Modal>
+      )}
+      {modals.loginModal && (
+        <Modal>
+          <LoginModal />
+        </Modal>
+      )}
+      {modals.authModal && (
+        <Modal>
+          <AuthModal />
         </Modal>
       )}
       <div className={styles.cart_container}>
@@ -52,15 +118,20 @@ export default function Cart() {
                   className={styles.input}
                   autoFocus
                   required
+                  value={isLoaded ? newFullName : ''}
+                  onChange={handleFullNameInput}
                 />
                 <label className={styles.placeholder}>Full Name</label>
               </div>
+
               <div className={styles.input_group}>
                 <input
-                  type="text"
+                  type="number"
                   id="phone"
                   className={styles.input}
                   required
+                  value={isLoaded ? newPhone : ''}
+                  onChange={handlePhoneInput}
                 />
                 <label className={styles.placeholder}>Phone</label>
               </div>
@@ -72,35 +143,24 @@ export default function Cart() {
                   id="country"
                   className={isOpen ? styles.input_country__active : styles.input_country}
                 >
-                  {country}
+                  {isLoaded ? newCountry : ''}
                 </div>
                 <button className={styles.dropdown_btn}></button>
                 {isOpen && (
                   <div className={styles.dropdown}>
-                    <div
-                      onClick={handleDropdownClick}
-                      className={styles.dropdown_item}
-                      aria-valuetext="1"
-                    >
-                      1
-                    </div>
-                    <div
-                      onClick={handleDropdownClick}
-                      className={styles.dropdown_item}
-                      aria-valuetext="2"
-                    >
-                      2
-                    </div>
-                    <div
-                      onClick={handleDropdownClick}
-                      className={styles.dropdown_item}
-                      aria-valuetext="3"
-                    >
-                      3
-                    </div>
+                    {countriesArray.map((el, index) => (
+                      <div
+                        key={index}
+                        onClick={handleDropdownClick}
+                        className={styles.dropdown_item}
+                        aria-valuetext={el}
+                      >
+                        {el}
+                      </div>
+                    ))}
                   </div>
                 )}
-                <label className={country ? styles.placeholder__active : styles.placeholder}>Country</label>
+                <label className={user.data?.country ? styles.placeholder__active : styles.placeholder}>Country</label>
               </div>
               <div className={styles.input_group}>
                 <input
@@ -108,6 +168,8 @@ export default function Cart() {
                   id="city"
                   className={styles.input}
                   required
+                  value={isLoaded ? newCity : ''}
+                  onChange={handleCityInput}
                 />
                 <label className={styles.placeholder}>City</label>
               </div>
@@ -117,9 +179,12 @@ export default function Cart() {
                   id="address"
                   className={styles.input}
                   required
+                  value={isLoaded ? newAddress : ''}
+                  onChange={handleAddressInput}
                 />
                 <label className={styles.placeholder}>Address</label>
               </div>
+
               <div className={styles.cart_form_info}>
                 <div className={styles.cart_form_info_text}>
                   <div>Items</div>
@@ -130,7 +195,17 @@ export default function Cart() {
                   <div>$ 575.19</div>
                 </div>
               </div>
-              <button onClick={() => dispatch(cartModal())} className={styles.confirm_btn}>Confirms the purchase</button>
+              <button
+                onClick={handleConfirmBtn}
+                disabled={
+                  newFullName === '' || newPhone === '' || newCountry === '' || newCity === '' || newAddress === ''
+                    ? true
+                    : false
+                }
+                className={styles.confirm_btn}
+              >
+                Confirms the purchase
+              </button>
               <Link
                 to="/"
                 className={styles.continueshop_btn}

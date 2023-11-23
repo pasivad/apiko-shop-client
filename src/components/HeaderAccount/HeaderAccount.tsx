@@ -25,19 +25,8 @@ export default function HeaderAccount() {
   const user: UserProps = useSelector((state: RootState) => state.user);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [fullName, setFullName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-
-  useEffect(() => {
-    if (user.data) {
-      setFullName(user.data?.fullName);
-      setEmail(user.data?.email);
-    }
-    if (user.data?.account) {
-      setFullName(user.data?.account?.fullName);
-      setEmail(user.data?.account?.email);
-    }
-  }, [user.data?.fullName]);
+  const [fullName, setFullName] = useState<string>(user.data?.fullName! || user.data?.account?.fullName!);
+  const [email, setEmail] = useState<string>(user.data?.email! || user.data?.account?.email!);
 
   const handleLogoutButton = () => {
     window.localStorage.removeItem('token');
@@ -46,7 +35,9 @@ export default function HeaderAccount() {
 
   return (
     <div className={styles.header_account_inner}>
-      <div className={styles.header_account_welcome}>{`Welcome, ${fullName.replace(/ .*/, '')}!`}</div>
+      <div className={styles.header_account_welcome}>
+        {`Welcome, ${fullName.replace(/ .*/, '')}!`}
+      </div>
       <div className={styles.header_account_initials}>
         {fullName
           .split(' ')

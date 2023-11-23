@@ -6,7 +6,7 @@
   margin: 0 auto;
 
   background-color: white;
-  border: 1px solid #E4E4E4;
+  border: 1px solid #e4e4e4;
 }
 
 .inner_container {
@@ -24,12 +24,12 @@
   justify-content: space-between;
 }
 
-.cart_list { 
+.cart_list {
   width: 62%;
 }
 
 .cart_form {
-  border-left: 1px solid #DEDEE0;
+  border-left: 1px solid #dedee0;
   padding-left: 35px;
   max-width: 250px;
 }
@@ -39,7 +39,7 @@
   padding: 10px 15px;
 
   border-radius: 4px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
 
   color: $dark_text;
 }
@@ -53,7 +53,7 @@
   padding: 10px 15px;
 
   border-radius: 4px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
 
   cursor: pointer;
 }
@@ -68,7 +68,7 @@
 
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
 
   cursor: pointer;
 }
@@ -153,9 +153,15 @@
   font-size: 14px;
   font-weight: 500;
 
-  transition: background-color .1s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
   &:hover {
     background-color: darken($color: $orange, $amount: 15);
+  }
+
+  &:disabled {
+    &:hover {
+      background-color: $orange;
+    }
   }
 }
 
@@ -177,7 +183,7 @@
   font-weight: 500;
   text-decoration: none;
 
-  transition: all .1s ease-in-out;
+  transition: all 0.1s ease-in-out;
   &:hover {
     background-color: darken($color: white, $amount: 20);
     color: darken($color: $orange, $amount: 20);
@@ -196,10 +202,9 @@
   padding: 0;
   background-color: transparent;
   border: none;
-  
 
   &::before {
-    content: "";
+    content: '';
     display: block;
 
     border-radius: 1px;
@@ -213,9 +218,9 @@
     z-index: 1;
     transform: rotate(45deg);
   }
- 
+
   &::after {
-    content: "";
+    content: '';
     display: block;
 
     border-radius: 1px;
@@ -235,15 +240,40 @@
   position: absolute;
   z-index: 2;
 
-  width: calc(100% - .5px);
+  width: calc(100% - 0.5px);
+  max-height: 300px;
+  overflow-y: scroll;
+
   box-sizing: border-box;
   padding: 7px 0 12px;
 
   background-color: white;
-  border: 1px solid #DEDEE0;
+  border: 1px solid #dedee0;
   border-top: none;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: white;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: lighten($color: #707070, $amount: 20);
+    border-radius: 4px;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #707070;
+  }
 }
 
 .dropdown_item {
@@ -252,10 +282,10 @@
   color: #373738;
 
   line-height: 26px;
-  padding: 5px 37px;
+  padding: 5px 15px;
   cursor: pointer;
 
   &:hover {
-    background-color: #F0F0F0;
+    background-color: #f0f0f0;
   }
 }

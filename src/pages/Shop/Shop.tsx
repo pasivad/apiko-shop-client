@@ -13,6 +13,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import CategoryBar from '../../components/CategoryBar/CategoryBar';
 import SortingBar from '../../components/SortingBar/SortingBar';
 import ProductItem from '../../components/ProductItem/ProductItem';
+import EmptyProductsList from '../../components/EmptyProductsList/EmptyProductsList';
 import Footer from '../../components/Footer/Footer';
 
 import Modal from '../../components/Modal/Modal';
@@ -49,7 +50,7 @@ export default function Shop() {
   const { products } = useSelector((state: RootState) => state.products);
 
   const isProductsLoading = products.status === 'loading';
-
+  
   return (
     <>
       <Header />
@@ -92,30 +93,37 @@ export default function Shop() {
             </>
           )}
         </div>
-        <div className={styles.products_list}>
-          {isProductsLoading && (
-            <div className={styles.loading_products}>
-              <RotatingLines
-                strokeColor="white"
-                strokeWidth="5"
-                animationDuration="1"
-                width="90"
-                visible={true}
-              />
-              <div className={styles.loading_text}>Searching...</div>
-            </div>
-          )}
-          {products.items.map((obj: ProductItemProps, index) => (
-            <ProductItem
-              key={index}
-              id={obj.id}
-              title={obj.title}
-              img={obj.picture}
-              price={obj.price}
+
+        {isProductsLoading && (
+          <div className={styles.loading_products}>
+            <RotatingLines
+              strokeColor="white"
+              strokeWidth="5"
+              animationDuration="1"
+              width="90"
+              visible={true}
             />
-          ))}
-        </div>
-        <button className={styles.loadmore_btn}>Load more...</button>
+            <div className={styles.loading_text}>Searching...</div>
+          </div>
+        )}
+        {products.items.length ? (
+          <>
+            <div className={styles.products_list}>
+              {products.items.map((obj: ProductItemProps, index) => (
+                <ProductItem
+                  key={index}
+                  id={obj.id}
+                  title={obj.title}
+                  img={obj.picture}
+                  price={obj.price}
+                />
+              ))}{' '}
+            </div>
+            <button className={styles.loadmore_btn}>Load more...</button>
+          </>
+        ) : (
+          <EmptyProductsList />
+        )}
       </div>
       <Footer />
     </>

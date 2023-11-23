@@ -1,0 +1,26 @@
+@import '../../styles/vars.scss';
+
+.empty_product_list {
+  width: 40%;
+  margin: 0 auto;
+  text-align: center;
+
+  min-height: 810px;
+  box-sizing: border-box;
+  padding-top: 240px;
+  font-family: 'Heebo';
+}
+
+.title {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 27px;
+  color: #101010;
+
+  margin-bottom: 10px;
+}
+.text {
+  font-size: 15px;
+  line-height: 22px;
+  color: $dark_text;
+}

@@ -16,8 +16,9 @@ interface ProductProps {
 }
 
 export default function ProductModal() {
-  const [product, setProduct] = useState<ProductProps>(Object);
   const dispatch = useDispatch();
+  const [product, setProduct] = useState<ProductProps>(Object);
+  const [itemsNumber, setItemsNumber] = useState<number>(1)
 
   const { id } = useParams<string>();
 
@@ -53,9 +54,9 @@ export default function ProductModal() {
                 <div className={styles.product_modal_price_value}>${product.price}</div>
               </div>
               <div className={styles.product_value_change_btns}>
-                <button className={styles.changevalue_btn__minus}></button>
-                <div className={styles.item_value}>1</div>
-                <button className={styles.changevalue_btn__plus}></button>
+                <button disabled={itemsNumber === 1} onClick={() => setItemsNumber(itemsNumber-1)} className={styles.changevalue_btn__minus}></button>
+                <div className={styles.item_value}>{itemsNumber}</div>
+                <button onClick={() => setItemsNumber(itemsNumber+1)} className={styles.changevalue_btn__plus}></button>
               </div>
               <div className={styles.product_modal_summary}>
                 <div className={styles.product_modal_summary_text}>
@@ -63,8 +64,8 @@ export default function ProductModal() {
                   <div className={styles.summary_text_total}>Total: </div>
                 </div>
                 <div className={styles.product_modal_summary_value}>
-                  <div className={styles.summary_value_items}>1</div>
-                  <div className={styles.summary_value_total}>$ 175.19</div>
+                  <div className={styles.summary_value_items}>{itemsNumber}</div>
+                  <div className={styles.summary_value_total}>{`${itemsNumber * product.price} $`}</div>
                 </div>
               </div>
             </div>
