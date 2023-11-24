@@ -33,7 +33,7 @@ export default function Shop() {
   const [search, setSearch] = useState<string>('');
   const [sort, setSort] = useState<string>('');
   const [categoryId, setCategoryId] = useState<number>(0);
-  const [page, setPage] = useState<number>(25);
+  const [page, setPage] = useState<number>(1);
   const [showPagesDropdown, setShowPagesDropdown] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
