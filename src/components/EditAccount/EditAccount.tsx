@@ -84,9 +84,9 @@ export default function EditAccount({ fullName, email, phone, country, city, add
       .put('/account/password', { oldPassword: currentPassword, password: newPassword })
       .then(() => {
         changePasswordNotify();
-        setCurrentPassword('')
-        setNewPassword('')
-        setConfirmPassword('')
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
       })
       .catch((e) => {
         setInvalidCurrentPassword(true);
@@ -350,8 +350,9 @@ export default function EditAccount({ fullName, email, phone, country, city, add
         </div>
       </div>
       <ToastContainer
-      className={styles.Toastify__toast__container}
-      autoClose={3000} />
+        className={styles.Toastify__toast__container}
+        autoClose={3000}
+      />
     </div>
   );
 }

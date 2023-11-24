@@ -2,21 +2,24 @@
 
 .order_item {
   font-family: 'Heebo';
+  text-decoration: none;
+
   margin-bottom: 20px;
   padding: 20px;
   width: 100%;
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
 
   background-color: white;
-  border: 1px solid #ECEEF0;
+  border: 1px solid #eceef0;
   border-radius: 4px;
 
-  box-shadow: 0 4px 14px 0 rgba($color: #797979, $alpha: .06);
+  box-shadow: 0 4px 14px 0 rgba($color: #797979, $alpha: 0.06);
 
-  transition: background-color .1s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
   &:hover {
-    background-color: #ECEEF0;
+    background-color: #eceef0;
   }
 }
 
@@ -29,15 +32,33 @@
 .order_info_about {
   font-size: 15px;
   color: #707070;
+  line-height: 22px;
 
   span {
     margin-left: 10px;
   }
+
+  div {
+    &:first-child {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.order_info_id {
+  color: $blue;
+  text-decoration: underline 1.5px;
 }
 
 .order_info_values {
   font-size: 15px;
   font-weight: 500;
   color: $dark_text;
-}
+  line-height: 22px;
 
+  div {
+    &:first-child {
+      margin-bottom: 5px;
+    }
+  }
+}

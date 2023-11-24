@@ -1,22 +1,30 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '../../api/http';
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async (sort: string) => {
-  sort = sort || 'latest';
-  const { data } = await axios.get(`/products?limit=12&sortBy=${sort}`);
-  return data;
-});
+export const fetchProducts = createAsyncThunk(
+  'products/fetchProducts',
+  async ({ sort, page }: { sort: string; page: number }) => {
+    sort = sort || 'latest';
+    const { data } = await axios.get(`/products?limit=12&offset=${page * 12 - 12}&sortBy=${sort}`);
+    return data;
+  }
+);
 
-export const fetchProductsSearch = createAsyncThunk('products/fetchProductsSearch', async (search: string) => {
-  const { data } = await axios.get(`/products/search?keywords=${search}&limit=12`);
-  return data;
-});
+export const fetchProductsSearch = createAsyncThunk(
+  'products/fetchProductsSearch',
+  async ({ search, page }: { search: string; page: number }) => {
+    const { data } = await axios.get(`/products/search?keywords=${search}&limit=12&offset=${page * 12 - 12}`);
+    return data;
+  }
+);
 
 export const fetchProductsCategory = createAsyncThunk(
   'products/fetchProductsCategory',
-  async ({ categoryId, sort }: { categoryId: number; sort: string }) => {
+  async ({ page, categoryId, sort }: { page: number; categoryId: number; sort: string }) => {
     sort = sort || 'latest';
-    const { data } = await axios.get(`/categories/${categoryId}/products?offset=0&limit=12&sortBy=${sort}`);
+    const { data } = await axios.get(
+      `/categories/${categoryId}/products?offset=${page * 12 - 12}&limit=12&sortBy=${sort}`
+    );
     return data;
   }
 );

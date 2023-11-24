@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { selectIsLogin } from '../../redux/slices/user';
+import { clearCart } from '../../redux/slices/cart';
 
 import styles from './CartModal.module.scss';
 
@@ -12,6 +13,15 @@ export default function CartModal() {
   const dispatch = useDispatch();
 
   const isAuth = useSelector(selectIsLogin);
+
+  const handleContinueShopBtn = () => {
+    dispatch(clearCart());
+    dispatch(cartModal());
+  };
+  const handleOrderHistoryBtn = () => {
+    dispatch(clearCart());
+    dispatch(cartModal());
+  };
 
   return (
     <>
@@ -26,7 +36,7 @@ export default function CartModal() {
 
           <Link
             to="/"
-            onClick={() => dispatch(cartModal())}
+            onClick={handleContinueShopBtn}
             className={styles.back_btn}
           >
             Continue shopping
@@ -34,7 +44,7 @@ export default function CartModal() {
           {isAuth && (
             <Link
               to="/account/orders"
-              onClick={() => dispatch(cartModal())}
+              onClick={handleOrderHistoryBtn}
               className={styles.order_btn}
             >
               View order history

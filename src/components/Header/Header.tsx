@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectIsLogin } from '../../redux/slices/user';
 import { authModal, loginModal, registerModal } from '../../redux/slices/modals';
 
+import { RootState } from '../../redux/store';
+
 import styles from './Header.module.scss';
 
 import logo from '../../images/logo.svg';
@@ -14,6 +16,7 @@ import HeaderAccount from '../HeaderAccount/HeaderAccount';
 
 export default function Header() {
   const dispatch = useDispatch();
+  const { cart } = useSelector((state: RootState) => state.cart);
 
   const isAuth = useSelector(selectIsLogin);
 
@@ -58,6 +61,13 @@ export default function Header() {
             src={icon_basket}
             className={styles.options_icons_img}
           ></img>
+          {cart.length !== 0 && (
+            <div className={styles.cart_number}>
+              {cart.reduce((acc, item) => {
+                return acc + item.quantity;
+              }, 0)}
+            </div>
+          )}
         </Link>
         {isAuth ? (
           <HeaderAccount />

@@ -33,6 +33,8 @@ export default function Shop() {
   const [search, setSearch] = useState<string>('');
   const [sort, setSort] = useState<string>('');
   const [categoryId, setCategoryId] = useState<number>(0);
+  const [page, setPage] = useState<number>(25);
+  const [showPagesDropdown, setShowPagesDropdown] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -40,17 +42,17 @@ export default function Shop() {
 
   useEffect(() => {
     debouncedSearchTerm
-      ? dispatch(fetchProductsSearch(debouncedSearchTerm))
+      ? dispatch(fetchProductsSearch({ page, search: debouncedSearchTerm }))
       : categoryId
-      ? dispatch(fetchProductsCategory({ categoryId, sort }))
-      : dispatch(fetchProducts(sort));
-  }, [debouncedSearchTerm, sort, categoryId]);
+      ? dispatch(fetchProductsCategory({ page, categoryId, sort }))
+      : dispatch(fetchProducts({ page, sort }));
+  }, [page, debouncedSearchTerm, sort, categoryId]);
 
   const modals = useSelector((state: RootState) => state.modals);
   const { products } = useSelector((state: RootState) => state.products);
 
   const isProductsLoading = products.status === 'loading';
-  
+
   return (
     <>
       <Header />
@@ -117,12 +119,36 @@ export default function Shop() {
                   img={obj.picture}
                   price={obj.price}
                 />
-              ))}{' '}
+              ))}
             </div>
-            <button className={styles.loadmore_btn}>Load more...</button>
           </>
         ) : (
           <EmptyProductsList />
+        )}
+        {page === 1 ? (
+          <button
+            onClick={() => setPage(2)}
+            className={styles.loadmore_btn}
+          >
+            Load more...
+          </button>
+        ) : (
+          <div className={styles.page_block}>
+            <div className={styles.page_select}>Page</div>
+            <div className={styles.page_select_group}>
+              <div id="page">{page}</div>
+              <button
+                onClick={() => setShowPagesDropdown(!showPagesDropdown)}
+                className={styles.dropdown_btn}
+              ></button>
+              {showPagesDropdown && <div className={styles.page_select_dropdown}>123</div>}
+            </div>
+            <div className={styles.page_max}>of 25</div>
+            <div className={styles.page_select_btns}>
+              <button className={styles.page_select__back}></button>
+              <button className={styles.page_select__next}></button>
+            </div>
+          </div>
         )}
       </div>
       <Footer />

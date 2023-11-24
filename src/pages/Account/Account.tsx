@@ -64,7 +64,7 @@ export default function Account() {
               to="/account/orders"
               onClick={() => setAccountMenu('/account/orders')}
               className={
-                accountMenu === '/account/orders' ? styles.account_menu_item__active : styles.account_menu_item
+                accountMenu.includes('/account/orders') ? styles.account_menu_item__active : styles.account_menu_item
               }
             >
               Orders History
@@ -73,7 +73,9 @@ export default function Account() {
               to="/account/favourites"
               onClick={() => setAccountMenu('/account/favourites')}
               className={
-                accountMenu === '/account/favourites' ? styles.account_menu_item__active : styles.account_menu_item
+                accountMenu.includes('/account/favourites')
+                  ? styles.account_menu_item__active
+                  : styles.account_menu_item
               }
             >
               Favourites
@@ -89,8 +91,8 @@ export default function Account() {
               address={user.data?.address}
             />
           )}
-          {accountMenu === '/account/orders' && <OrdersHistory />}
-          {accountMenu === '/account/favourites' && <Favourites />}
+          {accountMenu.includes('/account/orders') && <OrdersHistory />}
+          {accountMenu.includes('/account/favourites') && <Favourites />}
         </div>
       </div>
 

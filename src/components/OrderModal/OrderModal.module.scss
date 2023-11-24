@@ -33,6 +33,7 @@
 }
 
 .modal_close {
+  display: block;
   margin: 30px 30px 0 calc(100% - 55px);
   position: sticky;
   top: 30px;
@@ -85,7 +86,7 @@
 .order_modal {
   padding: 0 170px;
   width: 904px;
-  max-height: 844px;
+  // max-height: 844px;
   box-sizing: border-box;
 
   display: flex;

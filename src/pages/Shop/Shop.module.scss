@@ -75,3 +75,19 @@
   margin-top: 40px;
   line-height: 20px;
 }
+
+.page_block {
+  display: flex;
+  justify-content: right;
+  margin: 50px 0;
+}
+
+.page_select_group {
+  position: relative;
+  display: flex;
+}
+
+.page_select_dropdown {
+  position: absolute;
+  top: 20px;
+}

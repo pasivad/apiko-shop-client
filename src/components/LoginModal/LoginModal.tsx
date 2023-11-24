@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../redux/store';
 
 import { fetchLogin, fetchUser } from '../../redux/slices/user';
+import { clearCart } from '../../redux/slices/cart';
 import { loginModal, registerModal } from '../../redux/slices/modals';
 
 import styles from './LoginModal.module.scss';
@@ -31,7 +32,8 @@ export default function LoginModal() {
       if ('token' in data.payload) {
         window.localStorage.setItem('token', `Bearer ${data.payload.token}`);
         dispatch(loginModal());
-        dispatch(fetchUser())
+        dispatch(fetchUser());
+        dispatch(clearCart());
       }
     } else {
       setEmptyEmail(true);

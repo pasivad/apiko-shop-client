@@ -31,10 +31,16 @@ interface UserProps {
   status: string;
 }
 
+interface Orders {
+  productId: number;
+  quantity: number;
+}
+
 export default function Cart() {
   const dispatch = useDispatch();
   const modals = useSelector((state: RootState) => state.modals);
   const user: UserProps = useSelector((state: RootState) => state.user);
+  const { cart } = useSelector((state: RootState) => state.cart);
 
   const [countriesArray, setCountriesArray] = useState<Array<string>>([]);
 
@@ -73,10 +79,31 @@ export default function Cart() {
   };
 
   const handleConfirmBtn = () => {
-    dispatch(cartModal());
+    axios
+      .post('/orders', order)
+      .then(() => {
+        dispatch(cartModal());
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
   const isLoaded = user.status === 'loaded';
+
+  const order = {
+    items: cart.reduce((acc: Array<Orders>, item) => {
+      acc.push({ productId: item.id, quantity: item.quantity });
+      return acc;
+    }, []),
+    shipment: {
+      fullName: newFullName,
+      phone: newPhone,
+      country: newCountry,
+      city: newCity,
+      address: newAddress,
+    },
+  };
 
   return (
     <>
@@ -105,11 +132,23 @@ export default function Cart() {
         <div className={styles.inner_container}>
           <div className={styles.cart_title}>My cart</div>
           <div className={styles.cart_inner}>
-            <div className={styles.cart_list}>
-              {Array.from(Array(3).keys()).map((el) => (
-                <CartItem key={el} />
-              ))}
-            </div>
+            {cart.length ? (
+              <div className={styles.cart_list}>
+                {cart.map((item, index) => (
+                  <CartItem
+                    key={index}
+                    id={item.id}
+                    title={item.title}
+                    picture={item.picture}
+                    price={item.price}
+                    quantity={item.quantity}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className={styles.empty_cart_list}>There are no items in a cart</div>
+            )}
+
             <div className={styles.cart_form}>
               <div className={styles.input_group}>
                 <input
@@ -191,14 +230,23 @@ export default function Cart() {
                   <div>Total</div>
                 </div>
                 <div className={styles.cart_form_info_values}>
-                  <div>3</div>
-                  <div>$ 575.19</div>
+                  <div>
+                    {cart.reduce((acc, item) => {
+                      return acc + item.quantity;
+                    }, 0)}
+                  </div>
+                  <div>
+                    {'$ '}
+                    {cart.reduce((acc, item) => {
+                      return acc + item.price * item.quantity;
+                    }, 0)}
+                  </div>
                 </div>
               </div>
               <button
                 onClick={handleConfirmBtn}
                 disabled={
-                  newFullName === '' || newPhone === '' || newCountry === '' || newCity === '' || newAddress === ''
+                  newFullName === '' || newPhone === '' || newCountry === '' || newCity === '' || newAddress === '' || !cart.length
                     ? true
                     : false
                 }

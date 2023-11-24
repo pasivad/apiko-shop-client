@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import type { RootState } from '../../redux/store';
 
 import { logout } from '../../redux/slices/user';
+import { clearCart } from '../../redux/slices/cart';
 
 import styles from './HeaderAccount.module.scss';
 
@@ -30,14 +31,13 @@ export default function HeaderAccount() {
 
   const handleLogoutButton = () => {
     window.localStorage.removeItem('token');
+    dispatch(clearCart());
     dispatch(logout());
   };
 
   return (
     <div className={styles.header_account_inner}>
-      <div className={styles.header_account_welcome}>
-        {`Welcome, ${fullName.replace(/ .*/, '')}!`}
-      </div>
+      <div className={styles.header_account_welcome}>{`Welcome, ${fullName.replace(/ .*/, '')}!`}</div>
       <div className={styles.header_account_initials}>
         {fullName
           .split(' ')

@@ -2,9 +2,14 @@ import React from 'react';
 
 import styles from './OrderItem.module.scss';
 
-import test from '../../images/test.jpg';
+interface OrderItemProps {
+  title: string;
+  picture: string;
+  quantity: number;
+  orderedPrice: number;
+}
 
-export default function OrderItem() {
+export default function OrderItem({ title, picture, quantity, orderedPrice }: OrderItemProps) {
   return (
     <div className={styles.order_item}>
       <div className={styles.order_item_info}>
@@ -12,19 +17,19 @@ export default function OrderItem() {
           <img
             className={styles.order_item_img}
             alt="product_img"
-            src={test}
+            src={picture}
           ></img>
         </div>
         <div className={styles.order_item_options}>
-          <div className={styles.order_item_name}>SNEAKERS ZX 1K BOOST</div>
+          <div className={styles.order_item_name}>{title}</div>
           <div className={styles.order_item_number}>
-            Items:<span>1</span>
+            Items:<span>{quantity}</span>
           </div>
         </div>
       </div>
       <div className={styles.order_item_price}>
         <div className={styles.order_item_price_text}>Price:</div>
-        <div className={styles.order_item_price_value}>$175.19</div>
+        <div className={styles.order_item_price_value}>{`$ ${orderedPrice}`}</div>
       </div>
     </div>
   );

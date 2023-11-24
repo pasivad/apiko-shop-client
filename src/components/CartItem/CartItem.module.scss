@@ -19,13 +19,15 @@
 }
 
 .cart_item_info {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2.5fr;
+  align-items: center;
 }
 
 .img_background {
   width: 125px;
   height: 125px;
-  background-color: #ECEEF0;
+  background-color: #eceef0;
   border-radius: 3px;
 
   display: flex;
@@ -34,7 +36,9 @@
 
 .cart_img {
   width: 100%;
+  height: 100%;
   border-radius: 3px;
+  object-fit: cover;
 }
 
 .cart_item_options {
@@ -42,6 +46,7 @@
   font-family: 'Heebo';
   font-size: 14px;
   color: $dark_text;
+  max-width: 280px;
 }
 
 .cart_item_name {
@@ -146,6 +151,7 @@
 }
 
 .cart_item_price {
+  min-width: 57px;
   position: relative;
   display: flex;
   justify-content: center;
@@ -158,7 +164,7 @@
     display: block;
 
     width: 1px;
-    height: 103px;
+    height: 90%;
     background-color: #eceef0;
 
     position: absolute;

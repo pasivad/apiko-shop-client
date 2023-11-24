@@ -28,6 +28,18 @@
   width: 62%;
 }
 
+.empty_cart_list {
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 100px;
+  margin: 0 auto;
+
+  font-family: 'Heebo';
+  font-weight: 500;
+  font-size: 22px;
+  color: $dark_text;
+}
+
 .cart_form {
   border-left: 1px solid #dedee0;
   padding-left: 35px;

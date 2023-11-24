@@ -20,6 +20,8 @@
 
 .order_item_info {
   display: flex;
+  grid-template-columns: 1fr 2.5fr;
+  align-items: center;
 }
 
 .img_background {
@@ -34,18 +36,18 @@
 
 .order_item_img {
   width: 100%;
+  height: 100%;
   border-radius: 3px;
+  object-fit: cover;
 }
 
 .order_item_options {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-
+  text-align: left;
   margin: 10px 0 0 20px;
   font-family: 'Heebo';
   font-size: 14px;
   color: $dark_text;
+  max-width: 280px;
 }
 
 .order_item_name {
@@ -66,6 +68,7 @@
 }
 
 .order_item_price {
+  min-width: 57px;
   position: relative;
   display: flex;
   justify-content: center;

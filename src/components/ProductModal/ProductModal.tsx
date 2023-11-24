@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
+
+import { RootState } from '../../redux/store';
 
 import styles from './ProductModal.module.scss';
 
 import axios from '../../api/http';
 import { productModal } from '../../redux/slices/modals';
+import { addToCart } from '../../redux/slices/cart';
 
 interface ProductProps {
   id: number;
@@ -13,20 +17,41 @@ interface ProductProps {
   picture: string;
   price: number;
   description: string;
+  quantity: number;
 }
 
 export default function ProductModal() {
   const dispatch = useDispatch();
   const [product, setProduct] = useState<ProductProps>(Object);
-  const [itemsNumber, setItemsNumber] = useState<number>(1)
+  const [itemsNumber, setItemsNumber] = useState<number>(1);
 
   const { id } = useParams<string>();
 
   useEffect(() => {
     axios.get(`/products/${id}`).then(({ data }) => {
-      setProduct(data);
+      setProduct({ ...data, quantity: itemsNumber });
     });
   }, []);
+
+  const handleAddToCartBtn = () => {
+    dispatch(addToCart(product));
+    addProductToCart();
+  };
+
+  const handleBuyNowBtn = () => {
+    dispatch(addToCart(product));
+    dispatch(productModal());
+  };
+
+  const handleItemNumberChange = () => {
+    setItemsNumber(itemsNumber + 1);
+    setProduct({
+      ...product,
+      quantity: itemsNumber + 1,
+    });
+  };
+
+  const addProductToCart = () => toast(`The ${product.title} is successfully added to cart`);
 
   return (
     <>
@@ -54,9 +79,16 @@ export default function ProductModal() {
                 <div className={styles.product_modal_price_value}>${product.price}</div>
               </div>
               <div className={styles.product_value_change_btns}>
-                <button disabled={itemsNumber === 1} onClick={() => setItemsNumber(itemsNumber-1)} className={styles.changevalue_btn__minus}></button>
+                <button
+                  disabled={itemsNumber === 1}
+                  onClick={() => setItemsNumber(itemsNumber - 1)}
+                  className={styles.changevalue_btn__minus}
+                ></button>
                 <div className={styles.item_value}>{itemsNumber}</div>
-                <button onClick={() => setItemsNumber(itemsNumber+1)} className={styles.changevalue_btn__plus}></button>
+                <button
+                  onClick={handleItemNumberChange}
+                  className={styles.changevalue_btn__plus}
+                ></button>
               </div>
               <div className={styles.product_modal_summary}>
                 <div className={styles.product_modal_summary_text}>
@@ -71,11 +103,26 @@ export default function ProductModal() {
             </div>
           </div>
           <div className={styles.product_modal_btns}>
-            <button className={styles.white_btn}>ADD TO CART</button>
+            <button
+              onClick={handleAddToCartBtn}
+              className={styles.white_btn}
+            >
+              ADD TO CART
+            </button>
             <button className={styles.white_btn}>ADD TO FAVORITES</button>
-            <button className={styles.orange_btn}>BUY NOW</button>
+            <Link
+              to="/cart"
+              onClick={handleBuyNowBtn}
+              className={styles.orange_btn}
+            >
+              BUY NOW
+            </Link>
           </div>
         </div>
+        <ToastContainer
+          className={styles.Toastify__toast__container}
+          autoClose={3000}
+        />
       </div>
     </>
   );

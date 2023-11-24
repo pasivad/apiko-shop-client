@@ -285,9 +285,11 @@
 
 .orange_btn {
   width: 28%;
-  padding: 7px 0;
   margin-left: 40px;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
   font-family: 'Heebo';
   line-height: 24px;

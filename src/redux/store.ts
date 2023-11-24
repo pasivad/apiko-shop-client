@@ -1,24 +1,31 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { getDefaultMiddleware } from '@reduxjs/toolkit';
 
 import { modalsReducer } from './slices/modals';
 import { productsReducer } from './slices/products';
 import { userReducer } from './slices/user';
+import { cartReducer } from './slices/cart';
 
-const persistConfig = {
-  key: 'root',
+const persistConfigUser = {
+  key: 'user',
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, userReducer);
+const persistConfigCart = {
+  key: 'cart',
+  storage,
+};
+
+const persistedUserReducer = persistReducer(persistConfigUser, userReducer);
+const persistedCartReducer = persistReducer(persistConfigCart, cartReducer);
 
 const store = configureStore({
   reducer: {
     modals: modalsReducer,
     products: productsReducer,
-    user: persistedReducer,
+    user: persistedUserReducer,
+    cart: persistedCartReducer,
   },
   devTools: true,
   middleware: (getDefaultMiddleware) =>

@@ -38,6 +38,10 @@ function App() {
         element={<Account />}
       ></Route>
       <Route
+        path="/account/orders/:id"
+        element={<Account />}
+      ></Route>
+      <Route
         path="/account/favourites"
         element={<Account />}
       ></Route>
