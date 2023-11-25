@@ -1,40 +1,64 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, memo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch } from '../../redux/store';
 
 import styles from './ProductItem.module.scss';
 
+import axios from '../../api/http';
 import { productModal, authModal } from '../../redux/slices/modals';
+import { selectIsLogin } from '../../redux/slices/user';
 
 interface ProductProps {
   id: number;
   title: string;
-  img: string;
+  picture: string;
   price: number;
+  favorite: boolean;
 }
 
-export default function ProductItem({ id, title, img, price }: ProductProps) {
-  const dispatch = useDispatch();
-
+export default function ProductItem({ id, title, picture, price, favorite }: ProductProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const isAuth = useSelector(selectIsLogin);
   const [heartHover, setHeartHover] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(favorite);
 
-  const handleLikeButton = () => {
+  useEffect(() => {
+    setIsFavorite(favorite);
+  }, [favorite]);
+
+  const handleLikeButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    if (isAuth) {
+      if (isFavorite) {
+        axios.delete(`/products/${id}/favorite`).catch((e) => console.error(e));
+        setIsFavorite(false);
+      } else {
+        axios.post(`/products/${id}/favorite`).catch((e) => console.error(e));
+        setIsFavorite(true);
+      }
+    } else {
+      dispatch(authModal());
+    }
+  };
+
+  const handleProductItemBtn = () => {
+    navigate(`p/${id}`);
     dispatch(productModal());
-    dispatch(authModal());
   };
 
   return (
-    <Link
-      to={`/p/${id}`}
-      onClick={() => dispatch(productModal())}
+    <div
+      onClick={handleProductItemBtn}
       className={styles.item}
     >
       <div className={styles.item_inner}>
         <img
           alt="product"
           className={styles.item_img}
-          src={img}
+          src={picture}
         ></img>
         <button
           onMouseEnter={() => setHeartHover(true)}
@@ -42,11 +66,17 @@ export default function ProductItem({ id, title, img, price }: ProductProps) {
           onClick={handleLikeButton}
           className={styles.item_like}
         >
-          {heartHover ? <AiFillHeart /> : <AiOutlineHeart />}
+          {isFavorite ? (
+            <AiFillHeart className={styles.liked} />
+          ) : heartHover ? (
+            <AiFillHeart className={styles.like__hover} />
+          ) : (
+            <AiOutlineHeart className={styles.like__hover} />
+          )}
         </button>
       </div>
       <div className={styles.item_name}>{title}</div>
       <div className={styles.item_price}>{price} $</div>
-    </Link>
+    </div>
   );
-}
+};

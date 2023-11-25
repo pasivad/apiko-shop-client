@@ -1,12 +1,15 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState, useRef } from 'react';
 
 import styles from './SortingBar.module.scss';
+
+import ClickOutside from '../ClickOutside/ClickOutside';
 
 import sorting_icon from '../../images/icon_sorting.svg';
 
 interface SortingBarProps {
   sort: string;
   setSort: Dispatch<SetStateAction<string>>;
+  setPage: Dispatch<SetStateAction<number>>;
 }
 
 const SortVariables: { [key: string]: string } = {
@@ -14,16 +17,26 @@ const SortVariables: { [key: string]: string } = {
   popular: 'Popular',
 };
 
-export default function SortingBar({ sort, setSort }: SortingBarProps) {
+export default function SortingBar({ sort, setSort, setPage }: SortingBarProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const exceptionRef = useRef<HTMLDivElement>(null);
 
   const handleSortingClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsOpen(false);
     setSort(e.currentTarget.value);
+    setPage(1);
+  };
+
+  const handleCrearBtn = () => {
+    setSort('');
+    setPage(1);
   };
 
   return (
-    <div className={isOpen ? styles.sort_item__open : styles.sort_item}>
+    <div
+      ref={exceptionRef}
+      className={isOpen ? styles.sort_item__open : styles.sort_item}
+    >
       <button
         className={styles.sort_inner}
         onClick={() => setIsOpen(!isOpen)}
@@ -43,12 +56,17 @@ export default function SortingBar({ sort, setSort }: SortingBarProps) {
         ></button>
       ) : (
         <button
-          onClick={() => setSort('')}
+          onClick={handleCrearBtn}
           className={styles.sort_clear_btn}
         ></button>
       )}
       {isOpen && (
-        <div className={styles.sort_dropdown}>
+        <ClickOutside
+          exceptionRef={exceptionRef}
+          className={styles.sort_dropdown}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        >
           <button
             onClick={handleSortingClick}
             className={styles.sort_dropdown_item}
@@ -63,7 +81,7 @@ export default function SortingBar({ sort, setSort }: SortingBarProps) {
           >
             New
           </button>
-        </div>
+        </ClickOutside>
       )}
     </div>
   );

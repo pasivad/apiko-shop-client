@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import type { RootState } from '../../redux/store';
+import type { AppDispatch, RootState } from '../../redux/store';
 
 import { logout } from '../../redux/slices/user';
 import { clearCart } from '../../redux/slices/cart';
+import { fetchProducts } from '../../redux/slices/products';
 
 import styles from './HeaderAccount.module.scss';
+
+import ClickOutside from '../ClickOutside/ClickOutside';
 
 interface UserProps {
   data: {
@@ -22,9 +25,10 @@ interface UserProps {
 }
 
 export default function HeaderAccount() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const user: UserProps = useSelector((state: RootState) => state.user);
 
+  const exceptionRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [fullName, setFullName] = useState<string>(user.data?.fullName! || user.data?.account?.fullName!);
   const [email, setEmail] = useState<string>(user.data?.email! || user.data?.account?.email!);
@@ -33,6 +37,7 @@ export default function HeaderAccount() {
     window.localStorage.removeItem('token');
     dispatch(clearCart());
     dispatch(logout());
+    dispatch(fetchProducts({ sort: 'latest', page: 1 }));
   };
 
   return (
@@ -44,12 +49,19 @@ export default function HeaderAccount() {
           .map((word) => word.charAt(0))
           .join('')}
       </div>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={styles.header_account_btn}
-      ></button>
+      <div ref={exceptionRef}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={styles.header_account_btn}
+        ></button>
+      </div>
       {isOpen && (
-        <div className={styles.header_account_dropdown}>
+        <ClickOutside
+          exceptionRef={exceptionRef}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          className={styles.header_account_dropdown}
+        >
           <div className={styles.dropdown_info}>
             <div className={styles.dropdown_info_name}>{fullName}</div>
             <div className={styles.dropdown_info_email}>{email}</div>
@@ -69,7 +81,7 @@ export default function HeaderAccount() {
               Log Out
             </Link>
           </div>
-        </div>
+        </ClickOutside>
       )}
     </div>
   );

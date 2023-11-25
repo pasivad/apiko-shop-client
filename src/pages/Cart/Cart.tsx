@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -18,6 +18,7 @@ import CartModal from '../../components/CartModal/CartModal';
 import RegisterModal from '../../components/RegisterModal/RegisterModal';
 import LoginModal from '../../components/LoginModal/LoginModal';
 import AuthModal from '../../components/AuthModal/AuthModal';
+import ClickOutside from '../../components/ClickOutside/ClickOutside';
 
 interface UserProps {
   data: {
@@ -42,6 +43,7 @@ export default function Cart() {
   const user: UserProps = useSelector((state: RootState) => state.user);
   const { cart } = useSelector((state: RootState) => state.cart);
 
+  const exceptionRef = useRef<HTMLDivElement>(null);
   const [countriesArray, setCountriesArray] = useState<Array<string>>([]);
 
   useEffect(() => {
@@ -175,6 +177,7 @@ export default function Cart() {
                 <label className={styles.placeholder}>Phone</label>
               </div>
               <div
+                ref={exceptionRef}
                 onClick={() => setIsOpen(!isOpen)}
                 className={styles.input_group}
               >
@@ -186,7 +189,12 @@ export default function Cart() {
                 </div>
                 <button className={styles.dropdown_btn}></button>
                 {isOpen && (
-                  <div className={styles.dropdown}>
+                  <ClickOutside
+                    exceptionRef={exceptionRef}
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    className={styles.dropdown}
+                  >
                     {countriesArray.map((el, index) => (
                       <div
                         key={index}
@@ -197,9 +205,9 @@ export default function Cart() {
                         {el}
                       </div>
                     ))}
-                  </div>
+                  </ClickOutside>
                 )}
-                <label className={user.data?.country ? styles.placeholder__active : styles.placeholder}>Country</label>
+                <label className={newCountry ? styles.placeholder__active : styles.placeholder}>Country</label>
               </div>
               <div className={styles.input_group}>
                 <input
@@ -246,7 +254,12 @@ export default function Cart() {
               <button
                 onClick={handleConfirmBtn}
                 disabled={
-                  newFullName === '' || newPhone === '' || newCountry === '' || newCity === '' || newAddress === '' || !cart.length
+                  newFullName === '' ||
+                  newPhone === '' ||
+                  newCountry === '' ||
+                  newCity === '' ||
+                  newAddress === '' ||
+                  !cart.length
                     ? true
                     : false
                 }

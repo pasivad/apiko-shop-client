@@ -11,8 +11,10 @@ import Footer from '../../components/Footer/Footer';
 import EditAccount from '../../components/EditAccount/EditAccount';
 import OrdersHistory from '../../components/OrdersHistory/OrdersHistory';
 import Favourites from '../../components/Favourites/Favourites';
+
 import Modal from '../../components/Modal/Modal';
 import OrderModal from '../../components/OrderModal/OrderModal';
+import ProductModal from '../../components/ProductModal/ProductModal';
 
 interface UserProps {
   data: {
@@ -39,6 +41,11 @@ export default function Account() {
       {modals.orderModal && (
         <Modal>
           <OrderModal />
+        </Modal>
+      )}
+      {modals.productModal && (
+        <Modal>
+          <ProductModal />
         </Modal>
       )}
       <Header />

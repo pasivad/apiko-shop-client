@@ -1,5 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
+import useDebounce from '../../hooks/useDebounce';
+
 import styles from './SearchBar.module.scss';
 
 import search_icon from '../../images/icon_search.svg';
@@ -7,11 +9,13 @@ import search_icon from '../../images/icon_search.svg';
 interface SearchBarProps {
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
+  setPage: Dispatch<SetStateAction<number>>;
 }
 
-export default function SearchBar({ search, setSearch }: SearchBarProps) {
+export default function SearchBar({ search, setSearch, setPage }: SearchBarProps) {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     (e.target.value.length >= 3 || e.target.value.length === 0) && setSearch(e.target.value);
+    setPage(1);
   };
 
   return (

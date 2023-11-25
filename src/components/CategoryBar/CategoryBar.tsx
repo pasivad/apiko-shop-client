@@ -1,10 +1,12 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from 'react';
+import React, { Dispatch, SetStateAction, useState, useEffect, useRef } from 'react';
 
 import styles from './CategoryBar.module.scss';
 
 import category_icon from '../../images/icon_category.svg';
 
 import axios from '../../api/http';
+
+import ClickOutside from '../ClickOutside/ClickOutside';
 
 interface CategoryProps {
   id: number;
@@ -14,10 +16,11 @@ interface CategoryProps {
 interface CategoryBarProps {
   categoryId: number;
   setCategoryId: Dispatch<SetStateAction<number>>;
+  setPage: Dispatch<SetStateAction<number>>;
 }
 
-export default function CategoryBar({ categoryId, setCategoryId }: CategoryBarProps) {
-
+export default function CategoryBar({ categoryId, setCategoryId, setPage }: CategoryBarProps) {
+  const exceptionRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [categories, setCategories] = useState<Array<CategoryProps>>(Array);
 
@@ -30,10 +33,14 @@ export default function CategoryBar({ categoryId, setCategoryId }: CategoryBarPr
   const handleCategoriesClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsOpen(false);
     setCategoryId(Number(e.currentTarget.value));
+    setPage(1);
   };
 
   return (
-    <div className={isOpen ? styles.category_item__open : styles.category_item}>
+    <div
+      ref={exceptionRef}
+      className={isOpen ? styles.category_item__open : styles.category_item}
+    >
       <button
         className={styles.category_inner}
         onClick={() => setIsOpen(!isOpen)}
@@ -59,7 +66,12 @@ export default function CategoryBar({ categoryId, setCategoryId }: CategoryBarPr
         ></button>
       )}
       {isOpen && (
-        <div className={styles.category_dropdown}>
+        <ClickOutside
+          exceptionRef={exceptionRef}
+          className={styles.category_dropdown}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        >
           {categories.map((el, index) => (
             <button
               key={index}
@@ -70,7 +82,7 @@ export default function CategoryBar({ categoryId, setCategoryId }: CategoryBarPr
               {el.name}
             </button>
           ))}
-        </div>
+        </ClickOutside>
       )}
     </div>
   );

@@ -133,6 +133,7 @@
   margin-left: 40px;
   font-family: 'Heebo';
   width: 40%;
+  overflow: hidden;
 }
 
 .product_modal_name {
@@ -285,7 +286,6 @@
 
 .orange_btn {
   width: 28%;
-  margin-left: 40px;
 
   display: flex;
   align-items: center;
@@ -303,6 +303,10 @@
   &:hover {
     background-color: darken($color: $orange, $amount: 15);
     color: darken($color: white, $amount: 10);
+  }
+
+  &:last-child {
+    margin-left: 40px;
   }
 }
 

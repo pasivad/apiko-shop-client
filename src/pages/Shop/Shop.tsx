@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RotatingLines } from 'react-loader-spinner';
 
@@ -21,35 +21,45 @@ import RegisterModal from '../../components/RegisterModal/RegisterModal';
 import LoginModal from '../../components/LoginModal/LoginModal';
 import AuthModal from '../../components/AuthModal/AuthModal';
 import ProductModal from '../../components/ProductModal/ProductModal';
+import ClickOutside from '../../components/ClickOutside/ClickOutside';
 
 interface ProductItemProps {
   id: number;
   title: string;
   picture: string;
   price: number;
+  favorite: boolean;
 }
 
 export default function Shop() {
+  const dispatch = useDispatch<AppDispatch>();
+  const exceptionRef = useRef<HTMLDivElement>(null);
+
+  const modals = useSelector((state: RootState) => state.modals);
+  const { products } = useSelector((state: RootState) => state.products);
+
   const [search, setSearch] = useState<string>('');
   const [sort, setSort] = useState<string>('');
   const [categoryId, setCategoryId] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [showPagesDropdown, setShowPagesDropdown] = useState<boolean>(false);
 
-  const dispatch = useDispatch<AppDispatch>();
-
   const debouncedSearchTerm = useDebounce({ value: search, delay: 500 });
 
   useEffect(() => {
-    debouncedSearchTerm
-      ? dispatch(fetchProductsSearch({ page, search: debouncedSearchTerm }))
-      : categoryId
-      ? dispatch(fetchProductsCategory({ page, categoryId, sort }))
-      : dispatch(fetchProducts({ page, sort }));
+    if (debouncedSearchTerm) {
+      dispatch(fetchProductsSearch(debouncedSearchTerm));
+      setCategoryId(0);
+      setSort('');
+    } else if (categoryId) {
+      dispatch(fetchProductsCategory({ page, categoryId, sort }));
+    } else dispatch(fetchProducts({ page, sort }));
   }, [page, debouncedSearchTerm, sort, categoryId]);
 
-  const modals = useSelector((state: RootState) => state.modals);
-  const { products } = useSelector((state: RootState) => state.products);
+  const handlePageChangingBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setPage(Number(e.currentTarget.value));
+    setShowPagesDropdown(false);
+  };
 
   const isProductsLoading = products.status === 'loading';
 
@@ -81,16 +91,19 @@ export default function Shop() {
           <SearchBar
             setSearch={setSearch}
             search={search}
+            setPage={setPage}
           />
           {search === '' && (
             <>
               <CategoryBar
                 setCategoryId={setCategoryId}
                 categoryId={categoryId}
+                setPage={setPage}
               />
               <SortingBar
                 setSort={setSort}
                 sort={sort}
+                setPage={setPage}
               />
             </>
           )}
@@ -109,19 +122,18 @@ export default function Shop() {
           </div>
         )}
         {products.items.length ? (
-          <>
-            <div className={styles.products_list}>
-              {products.items.map((obj: ProductItemProps, index) => (
-                <ProductItem
-                  key={index}
-                  id={obj.id}
-                  title={obj.title}
-                  img={obj.picture}
-                  price={obj.price}
-                />
-              ))}
-            </div>
-          </>
+          <div className={styles.products_list}>
+            {products.items.map((obj: ProductItemProps) => (
+              <ProductItem
+                key={obj.id}
+                id={obj.id}
+                title={obj.title}
+                picture={obj.picture}
+                price={obj.price}
+                favorite={obj.favorite}
+              />
+            ))}
+          </div>
         ) : (
           <EmptyProductsList />
         )}
@@ -129,24 +141,56 @@ export default function Shop() {
           <button
             onClick={() => setPage(2)}
             className={styles.loadmore_btn}
+            hidden={debouncedSearchTerm.length >= 3}
           >
             Load more...
           </button>
         ) : (
           <div className={styles.page_block}>
             <div className={styles.page_select}>Page</div>
-            <div className={styles.page_select_group}>
-              <div id="page">{page}</div>
-              <button
-                onClick={() => setShowPagesDropdown(!showPagesDropdown)}
-                className={styles.dropdown_btn}
-              ></button>
-              {showPagesDropdown && <div className={styles.page_select_dropdown}>123</div>}
+            <div
+              ref={exceptionRef}
+              onClick={() => setShowPagesDropdown(!showPagesDropdown)}
+              className={showPagesDropdown ? styles.page_select_group__active : styles.page_select_group}
+            >
+              <div
+                className={styles.page_select_value}
+                id="page"
+              >
+                {page}
+              </div>
+              <button className={styles.dropdown_btn}></button>
+              {showPagesDropdown && (
+                <ClickOutside
+                  isOpen={showPagesDropdown}
+                  setIsOpen={setShowPagesDropdown}
+                  exceptionRef={exceptionRef}
+                  className={styles.page_select_dropdown}
+                >
+                  {Array.from(Array(25).keys()).map((el) => (
+                    <button
+                      key={el}
+                      onClick={handlePageChangingBtn}
+                      className={styles.page_select_dropdown_item}
+                      value={el + 1}
+                    >
+                      {el + 1}
+                    </button>
+                  ))}
+                </ClickOutside>
+              )}
             </div>
             <div className={styles.page_max}>of 25</div>
             <div className={styles.page_select_btns}>
-              <button className={styles.page_select__back}></button>
-              <button className={styles.page_select__next}></button>
+              <button
+                onClick={() => setPage(page - 1)}
+                className={styles.page_select__back}
+              ></button>
+              <button
+                onClick={() => setPage(page + 1)}
+                disabled={page === 25}
+                className={styles.page_select__next}
+              ></button>
             </div>
           </div>
         )}

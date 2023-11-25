@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { RootState } from '../../redux/store';
+import type { AppDispatch } from '../../redux/store';
 
 import styles from './ProductModal.module.scss';
 
@@ -11,25 +11,30 @@ import axios from '../../api/http';
 import { productModal } from '../../redux/slices/modals';
 import { addToCart } from '../../redux/slices/cart';
 
+
 interface ProductProps {
   id: number;
   title: string;
   picture: string;
   price: number;
   description: string;
+  favorite: boolean;
   quantity: number;
 }
 
 export default function ProductModal() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [product, setProduct] = useState<ProductProps>(Object);
   const [itemsNumber, setItemsNumber] = useState<number>(1);
+  const [isFavorite, setIsFavorite] = useState<boolean>(product.favorite);
 
   const { id } = useParams<string>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`/products/${id}`).then(({ data }) => {
       setProduct({ ...data, quantity: itemsNumber });
+      setIsFavorite(data.favorite);
     });
   }, []);
 
@@ -51,16 +56,37 @@ export default function ProductModal() {
     });
   };
 
+  const handleLikeBtn = () => {
+    if (isFavorite) {
+      axios
+        .delete(`/products/${id}/favorite`)
+
+        .catch((e) => console.error(e));
+      setIsFavorite(false);
+    } else {
+      axios
+        .post(`/products/${id}/favorite`)
+        
+        .catch((e) => console.error(e));
+      setIsFavorite(true);
+    }
+  };
+
+
+  const handleCloseBtn = () => {
+    navigate(-1);
+    dispatch(productModal());
+  };
+
   const addProductToCart = () => toast(`The ${product.title} is successfully added to cart`);
 
   return (
     <>
       <div className={styles.modal_window}>
-        <Link
-          to="/"
-          onClick={() => dispatch(productModal())}
+        <button
+          onClick={handleCloseBtn}
           className={styles.modal_close}
-        ></Link>
+        ></button>
 
         <div className={styles.product_modal}>
           <div className={styles.product_modal_inner}>
@@ -109,7 +135,22 @@ export default function ProductModal() {
             >
               ADD TO CART
             </button>
-            <button className={styles.white_btn}>ADD TO FAVORITES</button>
+            {isFavorite ? (
+              <button
+                onClick={handleLikeBtn}
+                className={styles.orange_btn}
+              >
+                ADDED TO FAVORITES ✓
+              </button>
+            ) : (
+              <button
+                onClick={handleLikeBtn}
+                className={styles.white_btn}
+              >
+                ADD TO FAVORITES
+              </button>
+            )}
+
             <Link
               to="/cart"
               onClick={handleBuyNowBtn}

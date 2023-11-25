@@ -243,3 +243,21 @@ input[type=number] {
 
   margin-top: 10px;
 }
+
+.password_reset {
+  display: flex;
+  justify-content: right;
+
+  text-align: right;
+  text-decoration: none;
+  font-family: 'Heebo';
+  font-size: 14px;
+  color: #8C8C8C;
+  background-color: transparent;
+  border: none;
+
+  transition: color .1s ease-in-out;
+  &:hover {
+    color: $dark_text;
+  }
+}

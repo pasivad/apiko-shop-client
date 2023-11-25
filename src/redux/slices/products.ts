@@ -10,13 +10,10 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-export const fetchProductsSearch = createAsyncThunk(
-  'products/fetchProductsSearch',
-  async ({ search, page }: { search: string; page: number }) => {
-    const { data } = await axios.get(`/products/search?keywords=${search}&limit=12&offset=${page * 12 - 12}`);
-    return data;
-  }
-);
+export const fetchProductsSearch = createAsyncThunk('products/fetchProductsSearch', async (search: string) => {
+  const { data } = await axios.get(`/products/search?keywords=${search}&limit=12`);
+  return data;
+});
 
 export const fetchProductsCategory = createAsyncThunk(
   'products/fetchProductsCategory',

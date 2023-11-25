@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import type { AppDispatch } from '../../redux/store';
 
 import { fetchLogin, fetchUser } from '../../redux/slices/user';
 import { clearCart } from '../../redux/slices/cart';
 import { loginModal, registerModal } from '../../redux/slices/modals';
+import { fetchProducts } from '../../redux/slices/products';
 
 import styles from './LoginModal.module.scss';
 
@@ -34,6 +36,7 @@ export default function LoginModal() {
         dispatch(loginModal());
         dispatch(fetchUser());
         dispatch(clearCart());
+        dispatch(fetchProducts({ page: 1, sort: 'latest' }));
       }
     } else {
       setEmptyEmail(true);
@@ -56,6 +59,10 @@ export default function LoginModal() {
     setPassword(e.target.value);
     e.target.value === '' ? setEmptyPassword(true) : setEmptyPassword(false);
     setValidateData(true);
+  };
+
+  const handleResetPasswordBtn = () => {
+    // dispatch(loginModal());
   };
 
   return (
@@ -104,9 +111,19 @@ export default function LoginModal() {
             <label className={!emptyPassword && validateData ? styles.placeholder : styles.placeholder__error}>
               Password
             </label>
-            <label className={styles.label_error}>{emptyPassword && 'Required info is missing'}</label>
+            <div>
+              <label className={styles.label_error}>{emptyPassword && 'Required info is missing'}</label>
+              <Link
+                to="/"
+                onClick={handleResetPasswordBtn}
+                className={styles.password_reset}
+              >
+                Don't remember password?
+              </Link>
+            </div>
             <label className={styles.data_error}>{!validateData && 'Email or password incorrect'}</label>
           </div>
+
           <button
             className={styles.login_btn}
             onClick={handleLogInButton}

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { AppDispatch, RootState } from '../../redux/store';
+
 import { selectIsLogin } from '../../redux/slices/user';
 import { authModal, loginModal, registerModal } from '../../redux/slices/modals';
-
-import { RootState } from '../../redux/store';
 
 import styles from './Header.module.scss';
 
@@ -15,19 +15,19 @@ import icon_basket from '../../images/icon_basket.svg';
 import HeaderAccount from '../HeaderAccount/HeaderAccount';
 
 export default function Header() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { cart } = useSelector((state: RootState) => state.cart);
 
   const isAuth = useSelector(selectIsLogin);
 
   return (
     <div className={styles.header}>
-      <Link to="/">
+      <a href="/">
         <img
           src={logo}
           alt="logo"
         ></img>
-      </Link>
+      </a>
       <div className={styles.header_options}>
         {isAuth ? (
           <Link

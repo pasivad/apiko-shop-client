@@ -7,6 +7,8 @@ import type { AppDispatch, RootState } from './redux/store';
 import Shop from './pages/Shop/Shop';
 import Account from './pages/Account/Account';
 import Cart from './pages/Cart/Cart';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
+import Product from './pages/Product/Product';
 
 function App() {
   const modals = useSelector((state: RootState) => state.modals);
@@ -22,11 +24,11 @@ function App() {
   return (
     <Routes>
       <Route
-        path="/"
+        path="/p/:id"
         element={<Shop />}
       ></Route>
       <Route
-        path="/p/:id"
+        path="/"
         element={<Shop />}
       ></Route>
       <Route
@@ -46,8 +48,16 @@ function App() {
         element={<Account />}
       ></Route>
       <Route
+        path="/account/favourites/p/:id"
+        element={<Account />}
+      ></Route>
+      <Route
         path="/cart"
         element={<Cart />}
+      ></Route>
+      <Route
+        path="/reset"
+        element={<ResetPassword />}
       ></Route>
     </Routes>
   );
