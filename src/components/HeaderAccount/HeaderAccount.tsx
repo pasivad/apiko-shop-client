@@ -30,8 +30,6 @@ export default function HeaderAccount() {
 
   const exceptionRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [fullName, setFullName] = useState<string>(user.data?.fullName! || user.data?.account?.fullName!);
-  const [email, setEmail] = useState<string>(user.data?.email! || user.data?.account?.email!);
 
   const handleLogoutButton = () => {
     window.localStorage.removeItem('token');
@@ -42,12 +40,15 @@ export default function HeaderAccount() {
 
   return (
     <div className={styles.header_account_inner}>
-      <div className={styles.header_account_welcome}>{`Welcome, ${fullName.replace(/ .*/, '')}!`}</div>
+      <div className={styles.header_account_welcome}>{`Welcome, ${
+        user.data?.fullName! || user.data?.account?.fullName!.replace(/ .*/, '')
+      }!`}</div>
       <div className={styles.header_account_initials}>
-        {fullName
-          .split(' ')
-          .map((word) => word.charAt(0))
-          .join('')}
+        {user.data?.fullName! ||
+          user.data?.account
+            ?.fullName!.split(' ')
+            .map((word) => word.charAt(0))
+            .join('')}
       </div>
       <div ref={exceptionRef}>
         <button
@@ -63,8 +64,8 @@ export default function HeaderAccount() {
           className={styles.header_account_dropdown}
         >
           <div className={styles.dropdown_info}>
-            <div className={styles.dropdown_info_name}>{fullName}</div>
-            <div className={styles.dropdown_info_email}>{email}</div>
+            <div className={styles.dropdown_info_name}>{user.data?.fullName! || user.data?.account?.fullName!}</div>
+            <div className={styles.dropdown_info_email}>{user.data?.email! || user.data?.account?.email!}</div>
           </div>
           <div className={styles.dropdown_btns}>
             <Link
