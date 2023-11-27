@@ -41,14 +41,21 @@ export default function HeaderAccount() {
   return (
     <div className={styles.header_account_inner}>
       <div className={styles.header_account_welcome}>{`Welcome, ${
-        user.data?.fullName! || user.data?.account?.fullName!.replace(/ .*/, '')
+        user.data?.fullName!
+          ? user.data?.fullName!.replace(/ .*/, '')
+          : user.data?.account?.fullName! && user.data?.account?.fullName!.replace(/ .*/, '')
       }!`}</div>
       <div className={styles.header_account_initials}>
-        {user.data?.fullName! ||
-          user.data?.account
-            ?.fullName!.split(' ')
-            .map((word) => word.charAt(0))
-            .join('')}
+        {user.data?.fullName!
+          ? user.data
+              ?.fullName!.split(' ')
+              .map((word) => word.charAt(0))
+              .join('')
+          : user.data?.account?.fullName! &&
+            user.data?.account
+              ?.fullName!.split(' ')
+              .map((word) => word.charAt(0))
+              .join('')}
       </div>
       <div ref={exceptionRef}>
         <button
