@@ -6,9 +6,9 @@ import type { AppDispatch } from '../../redux/store';
 
 import styles from './ProductItem.module.scss';
 
-import axios from '../../api/http';
 import { productModal, authModal } from '../../redux/slices/modals';
 import { selectIsLogin } from '../../redux/slices/user';
+import { addFavorite, deleteFavorite } from '../../redux/slices/products';
 
 interface ProductProps {
   id: number;
@@ -33,10 +33,10 @@ export default function ProductItem({ id, title, picture, price, favorite }: Pro
     e.stopPropagation();
     if (isAuth) {
       if (isFavorite) {
-        axios.delete(`/products/${id}/favorite`).catch((e) => console.error(e));
+        dispatch(deleteFavorite(id));
         setIsFavorite(false);
       } else {
-        axios.post(`/products/${id}/favorite`).catch((e) => console.error(e));
+        dispatch(addFavorite(id));
         setIsFavorite(true);
       }
     } else {
@@ -79,4 +79,4 @@ export default function ProductItem({ id, title, picture, price, favorite }: Pro
       <div className={styles.item_price}>{price} $</div>
     </div>
   );
-};
+}

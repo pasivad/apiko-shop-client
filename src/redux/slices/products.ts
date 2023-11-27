@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '../../api/http';
 
 export const fetchProducts = createAsyncThunk(
@@ -26,9 +26,18 @@ export const fetchProductsCategory = createAsyncThunk(
   }
 );
 
+interface CartItemProps {
+  id: number;
+  title: string;
+  picture: string;
+  price: number;
+  quantity: number;
+  favorite: boolean;
+}
+
 const initialState = {
   products: {
-    items: [],
+    items: [] as Array<CartItemProps>,
     status: 'loading',
   },
 };
@@ -36,7 +45,38 @@ const initialState = {
 const productsSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
+  reducers: {
+    addFavorite: (state, action: PayloadAction<number>) => {
+      try {
+        axios.post(`/products/${action.payload}/favorite`);
+
+        const index = state.products.items.findIndex((it: CartItemProps) => it.id === action.payload);
+        const newItems = [...state.products.items];
+        let objCopy = { ...state.products.items[index] };
+        objCopy.favorite = true;
+        newItems[index] = objCopy;
+
+        return { ...state, products: { items: newItems, status: 'loaded' } };
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    deleteFavorite: (state, action: PayloadAction<number>) => {
+      try {
+        axios.delete(`/products/${action.payload}/favorite`);
+
+        const index = state.products.items.findIndex((it: CartItemProps) => it.id === action.payload);
+        const newItems = [...state.products.items];
+        let objCopy = { ...state.products.items[index] };
+        objCopy.favorite = false;
+        newItems[index] = objCopy;
+
+        return { ...state, products: { items: newItems, status: 'loaded' } };
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.pending, (state) => {
       state.products.status = 'loading';
@@ -72,3 +112,5 @@ const productsSlice = createSlice({
 });
 
 export const productsReducer = productsSlice.reducer;
+
+export const { addFavorite, deleteFavorite } = productsSlice.actions;

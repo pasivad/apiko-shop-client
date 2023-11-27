@@ -15,7 +15,6 @@ interface ProductItem {
 }
 
 export default function Favourites() {
-
   const [favorites, setFavorites] = useState<Array<ProductItem>>(Array);
 
   useEffect(() => {
@@ -23,11 +22,9 @@ export default function Favourites() {
       .get('/products/favorites')
       .then(({ data }) => {
         setFavorites(data);
-        console.log(data);
       })
       .catch((e) => console.error(e));
   }, []);
-
 
   return (
     <div className={styles.favorites_grid}>

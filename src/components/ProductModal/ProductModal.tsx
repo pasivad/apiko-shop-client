@@ -10,7 +10,7 @@ import styles from './ProductModal.module.scss';
 import axios from '../../api/http';
 import { productModal } from '../../redux/slices/modals';
 import { addToCart } from '../../redux/slices/cart';
-
+import { addFavorite, deleteFavorite } from '../../redux/slices/products';
 
 interface ProductProps {
   id: number;
@@ -58,20 +58,13 @@ export default function ProductModal() {
 
   const handleLikeBtn = () => {
     if (isFavorite) {
-      axios
-        .delete(`/products/${id}/favorite`)
-
-        .catch((e) => console.error(e));
+      dispatch(deleteFavorite(product.id));
       setIsFavorite(false);
     } else {
-      axios
-        .post(`/products/${id}/favorite`)
-        
-        .catch((e) => console.error(e));
+      dispatch(addFavorite(product.id));
       setIsFavorite(true);
     }
   };
-
 
   const handleCloseBtn = () => {
     navigate(-1);

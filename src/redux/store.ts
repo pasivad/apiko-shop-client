@@ -27,7 +27,7 @@ const store = configureStore({
     user: persistedUserReducer,
     cart: persistedCartReducer,
   },
-  devTools: false,
+  devTools: true,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
