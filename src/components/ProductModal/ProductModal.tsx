@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 
 import type { AppDispatch } from '../../redux/store';
@@ -8,9 +8,10 @@ import type { AppDispatch } from '../../redux/store';
 import styles from './ProductModal.module.scss';
 
 import axios from '../../api/http';
-import { productModal } from '../../redux/slices/modals';
+import { authModal, productModal } from '../../redux/slices/modals';
 import { addToCart } from '../../redux/slices/cart';
 import { addFavorite, deleteFavorite } from '../../redux/slices/products';
+import { selectIsLogin } from '../../redux/slices/user';
 
 interface ProductProps {
   id: number;
@@ -28,6 +29,7 @@ export default function ProductModal() {
   const [itemsNumber, setItemsNumber] = useState<number>(1);
   const [isFavorite, setIsFavorite] = useState<boolean>(product.favorite);
 
+  const isAuth = useSelector(selectIsLogin)
   const { id } = useParams<string>();
   const navigate = useNavigate();
 
@@ -57,12 +59,18 @@ export default function ProductModal() {
   };
 
   const handleLikeBtn = () => {
-    if (isFavorite) {
-      dispatch(deleteFavorite(product.id));
-      setIsFavorite(false);
+    if (isAuth) {
+      if (isFavorite) {
+        dispatch(deleteFavorite(product.id));
+        setIsFavorite(false);
+      } else {
+        dispatch(addFavorite(product.id));
+        setIsFavorite(true);
+      }
     } else {
-      dispatch(addFavorite(product.id));
-      setIsFavorite(true);
+      dispatch(productModal())
+      dispatch(authModal());
+      navigate(-1)
     }
   };
 

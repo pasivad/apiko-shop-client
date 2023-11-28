@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import type { AppDispatch } from '../../redux/store';
 
 import { loginModal, registerModal } from '../../redux/slices/modals';
-import { fetchRegister } from '../../redux/slices/user';
+import { fetchRegister, fetchUser } from '../../redux/slices/user';
 import { clearCart } from '../../redux/slices/cart';
 import { fetchProducts } from '../../redux/slices/products';
 
@@ -54,6 +53,7 @@ export default function RegisterModal() {
         window.localStorage.setItem('token', `Bearer ${data.payload.token}`);
         dispatch(registerModal());
         dispatch(clearCart());
+        dispatch(fetchUser())
         dispatch(fetchProducts({ page: 1, sort: 'latest' }));
       }
     }
